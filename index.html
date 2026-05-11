@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1280, initial-scale=1.0" />
+  <title>Popó Park</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="stylesheet" href="css/cards.css" />
+  <link rel="stylesheet" href="css/park.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <!-- =============================================================
+       VIEWPORT raíz: contiene todas las pantallas del juego.
+       Se escala automáticamente al tamaño de la ventana
+       manteniendo proporción 16:9 (1920x1080 lógico).
+       ============================================================= -->
+  <div id="viewport-wrap">
+    <div id="viewport">
+
+      <!-- ============== PANTALLA DE CARGA ============== -->
+      <section id="screen-loading" class="screen active">
+        <div class="loading-inner">
+          <div class="logo-large">Popó Park</div>
+          <div class="loader-bar"><div class="loader-fill"></div></div>
+          <div class="loader-text">Cargando parque…</div>
+        </div>
+      </section>
+
+      <!-- ============== MENÚ PRINCIPAL ============== -->
+      <section id="screen-menu" class="screen">
+        <div class="menu-bg"></div>
+        <div class="menu-inner">
+          <h1 class="logo-large">Popó Park</h1>
+          <p class="logo-sub">Idle Simulation · Dog Breeding · Park Management</p>
+          <nav class="menu-buttons">
+            <button class="btn primary big" data-menu="continue">Continuar</button>
+            <button class="btn big" data-menu="new">Nueva partida</button>
+            <button class="btn ghost big" data-menu="options">Opciones</button>
+            <button class="btn ghost big" data-menu="credits">Créditos</button>
+            <button class="btn ghost big" data-menu="exit">Salir</button>
+          </nav>
+          <div class="menu-version">v0.1.0 · build local</div>
+        </div>
+      </section>
+
+      <!-- ============== PANTALLA DE JUEGO ============== -->
+      <section id="screen-game" class="screen">
+        <!-- Barra superior -->
+        <header id="topbar">
+          <div class="title">Popó Park</div>
+          <div class="stat" data-stat="poop"><span class="ico">💩</span><strong id="stat-poop">0</strong></div>
+          <div class="stat" data-stat="ppm"><span class="ico">⚡</span><strong id="stat-ppm">0</strong>/min</div>
+          <div class="stat" data-stat="dogs"><span class="ico">🐾</span><strong id="stat-dogs">0/0</strong></div>
+          <div class="stat" data-stat="combo"><span class="ico">🔥</span><strong id="stat-combo">x1.0</strong></div>
+          <div class="stat fever" data-stat="fever">
+            <div class="fever-fill" id="fever-fill"></div>
+            <span class="ico">✨</span><strong id="stat-fever">Fiebre 0%</strong>
+          </div>
+          <div id="event-banner" class="hidden"></div>
+          <div class="actions">
+            <button class="btn ghost" id="btn-save">Guardar</button>
+            <button class="btn ghost" id="btn-pause">Pausa</button>
+            <button class="btn ghost" id="btn-options">Opciones</button>
+            <button class="btn ghost" id="btn-menu">Menú</button>
+          </div>
+        </header>
+
+        <!-- Cuerpo principal: 3 columnas + footer -->
+        <main id="game-body">
+          <!-- Panel izquierdo -->
+          <aside id="panel-left" class="panel glass">
+            <div class="panel-header">Tienda</div>
+            <div id="shop-list" class="shop-list scroll-y"></div>
+            <div class="panel-header">Misión</div>
+            <div id="mission-card" class="mission-card"></div>
+            <div class="panel-header">Mini objetivo</div>
+            <div id="goal-card" class="goal-card"></div>
+          </aside>
+
+          <!-- Centro: parque -->
+          <section id="park-area">
+            <canvas id="park-canvas" width="1080" height="720"></canvas>
+            <div id="park-overlay"></div>
+          </section>
+
+          <!-- Panel derecho -->
+          <aside id="panel-right" class="panel glass">
+            <div class="tabs" id="inventory-tabs"></div>
+            <div class="tab-content scroll-y" id="inventory-content"></div>
+          </aside>
+        </main>
+
+        <!-- Footer / log -->
+        <footer id="game-footer" class="glass">
+          <div id="event-log" class="event-log"></div>
+        </footer>
+      </section>
+
+      <!-- ============== OVERLAYS ============== -->
+      <div id="modal-root"></div>
+      <div id="tooltip-root"></div>
+      <div id="toast-root"></div>
+      <div id="particle-root"></div>
+      <div id="pause-overlay" class="hidden">
+        <div class="pause-card">
+          <h2>Pausa</h2>
+          <button class="btn primary big" id="pause-resume">Reanudar</button>
+          <button class="btn big" id="pause-save">Guardar</button>
+          <button class="btn ghost big" id="pause-options">Opciones</button>
+          <button class="btn ghost big" id="pause-menu">Menú principal</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

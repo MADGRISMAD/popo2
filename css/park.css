@@ -1,0 +1,97 @@
+/* ============================================================
+   park.css — overlays del parque, popó visible, tooltips de objetos
+   ============================================================ */
+
+#park-overlay { font-size: 12px; }
+
+/* Indicador de capacidad o build mode */
+.build-grid-overlay {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.10) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Etiquetas flotantes (popó por minuto, fiebre, etc.) */
+.float-label {
+  position: absolute;
+  pointer-events: none;
+  color: var(--c-gold-0);
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  animation: floatUp 1.4s ease-out forwards;
+  z-index: 50;
+}
+
+/* Cursor especial sobre popó */
+.poop-cursor #park-canvas { cursor: crosshair; }
+
+/* Indicadores de capacidad en panel */
+.capacity-bar {
+  height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;
+  margin-top: 4px; overflow: hidden;
+}
+.capacity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-green-0), var(--c-gold-0));
+  transition: width 0.3s;
+}
+.capacity-bar.full .capacity-fill {
+  background: linear-gradient(90deg, var(--c-red-0), var(--c-red-1));
+}
+
+/* Plato de comida (panel) */
+.bowl-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--c-glass-border);
+  border-radius: 10px; padding: 8px;
+  display: grid; grid-template-columns: 32px 1fr auto; gap: 8px; align-items: center;
+}
+.bowl-card .ico { font-size: 24px; }
+.bowl-card .name { font-weight: 700; font-size: 12px; }
+.bowl-card .meta { font-size: 11px; color: var(--c-fg-muted); }
+
+/* Objeto del parque */
+.object-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--c-glass-border);
+  border-radius: 10px; padding: 8px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.object-card .name { font-weight: 700; font-size: 12px; }
+.object-card .desc { font-size: 11px; color: var(--c-fg-muted); }
+
+/* Modal crianza */
+.breed-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center;
+}
+.breed-slot {
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed var(--c-glass-border);
+  border-radius: 12px; padding: 16px;
+  text-align: center; min-height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.breed-slot.filled { border-style: solid; border-color: var(--c-gold-0); }
+.breed-arrow { font-size: 28px; color: var(--c-gold-0); }
+.breed-info {
+  margin-top: 16px; padding: 12px;
+  background: rgba(0,0,0,0.25); border-radius: 10px;
+}
+.breed-info .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.breed-info .row strong { color: var(--c-fg); }
+
+/* Colección */
+.collection-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px;
+}
+.collection-cell {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--c-glass-border);
+  border-radius: 10px; padding: 8px;
+  text-align: center; font-size: 11px;
+}
+.collection-cell.locked { opacity: 0.45; filter: grayscale(0.8); }
+.collection-cell .silhouette { font-size: 40px; margin-bottom: 4px; }

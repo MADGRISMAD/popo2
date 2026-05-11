@@ -1,0 +1,123 @@
+/* ============================================================
+   cards.css — cartas de perro, sobres, recompensas
+   ============================================================ */
+
+.card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid var(--c-glass-border);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex; flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+
+/* Borde de rareza */
+.card.r-comun   { border-color: var(--r-comun); }
+.card.r-raro    { border-color: var(--r-raro); box-shadow: 0 0 8px rgba(59,130,246,0.25); }
+.card.r-epico   { border-color: var(--r-epico); box-shadow: 0 0 12px rgba(168,85,247,0.30); }
+.card.r-legend  { border-color: var(--r-legend); box-shadow: 0 0 16px rgba(251,191,36,0.45); }
+.card.r-mitico  { border-color: var(--r-mitico); box-shadow: 0 0 18px rgba(239,68,68,0.50); }
+.card.r-cosmico { border-color: var(--r-cosmico); box-shadow: 0 0 24px rgba(236,72,153,0.55); animation: cosmicShimmer 3s infinite; }
+
+.card .card-thumb {
+  height: 88px; border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(255,255,255,0.05));
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  margin-bottom: 6px;
+}
+.card .card-name { font-weight: 700; font-size: 12px; line-height: 1.2; }
+.card .card-meta { font-size: 10px; color: var(--c-fg-muted); margin-top: 2px; display: flex; justify-content: space-between; }
+.card .card-stack {
+  position: absolute; top: 4px; right: 4px;
+  background: rgba(0,0,0,0.65); color: white;
+  border-radius: 8px; padding: 2px 6px; font-size: 10px; font-weight: 700;
+}
+.card .card-quality {
+  position: absolute; top: 4px; left: 4px;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 0 0 6px currentColor;
+}
+.q-gris    { color: var(--q-gris);    background: var(--q-gris); }
+.q-verde   { color: var(--q-verde);   background: var(--q-verde); }
+.q-azul    { color: var(--q-azul);    background: var(--q-azul); }
+.q-morado  { color: var(--q-morado);  background: var(--q-morado); }
+.q-dorado  { color: var(--q-dorado);  background: var(--q-dorado); }
+.q-rojo    { color: var(--q-rojo);    background: var(--q-rojo); }
+.q-cosmico { color: var(--q-cosmico); background: var(--q-cosmico); animation: cosmicShimmer 2s infinite; }
+
+/* Grid de cartas */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+  padding: 4px;
+}
+
+/* Sobres */
+.pack {
+  position: relative;
+  border-radius: 14px; padding: 14px;
+  background: linear-gradient(160deg, var(--c-purple-1), #1f1140);
+  border: 1px solid var(--c-purple-0);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; min-height: 180px;
+  transition: transform 0.15s;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.pack:hover { transform: translateY(-3px) scale(1.02); }
+.pack .pack-icon { font-size: 60px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+.pack .pack-name { font-weight: 800; text-align: center; font-size: 14px; }
+.pack .pack-desc { font-size: 11px; color: var(--c-fg-muted); text-align: center; }
+.pack .pack-price { font-size: 13px; font-weight: 700; }
+.pack .pack-actions { display: flex; gap: 6px; width: 100%; margin-top: auto; }
+.pack .pack-actions .btn { flex: 1; }
+
+.pack.gold { background: linear-gradient(160deg, var(--c-gold-1), #4a2c00); border-color: var(--c-gold-0); }
+.pack.gold .pack-icon { filter: drop-shadow(0 0 12px rgba(251,191,36,0.6)); }
+.pack.legendary {
+  background: linear-gradient(160deg, var(--c-red-1), #2a0606);
+  border-color: var(--c-red-0);
+  animation: legendPulse 2s infinite;
+}
+
+/* Animación apertura sobre */
+.pack-opening {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000; pointer-events: auto;
+}
+.pack-reveal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 140px);
+  grid-auto-rows: 180px;
+  gap: 12px;
+  max-width: 80%;
+}
+.pack-reveal-card {
+  opacity: 0;
+  transform: scale(0.5) rotateY(180deg);
+  animation: revealCard 0.5s cubic-bezier(.2,.8,.2,1.2) forwards;
+}
+
+/* Item simple */
+.item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--c-glass-border);
+  border-radius: 8px; padding: 6px 8px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px;
+}
+.item .ico { font-size: 16px; }
+.item .qty { margin-left: auto; font-weight: 700; }
