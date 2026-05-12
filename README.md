@@ -1,6 +1,7 @@
 # Popó Park
 
 Idle simulation · card collecting · park management · breeding · casual strategy.
+Estética **diorama de papel recortado** (cartulina, stickers, sombras suaves, animaciones juguetonas).
 
 Hecho 100% con **HTML, CSS y JavaScript puro**. Sin frameworks, sin librerías, sin CDN, sin imágenes ni sonidos externos. Todo offline. Pensado para ejecutarse local en navegador y, en el futuro, empaquetarse como juego de escritorio para Steam.
 
@@ -98,6 +99,52 @@ popo-park/
 - Renombre Canino (prestigio) con puntos persistentes.
 - Guardado local con migración versionada.
 - Audio sintetizado (Web Audio API).
+
+---
+
+## Dirección artística — diorama de papel
+
+El juego se ve como una maqueta hecha de papel recortado y stickers premium:
+
+- **Texturas de papel procedurales** generadas en runtime (`js/render/paperTexture.js`).
+- **Pasto, caminos y árboles** renderizados como capas con sombras desplazadas y bordes oscuros estilo pieza recortada.
+- **Perros** con silueta distinta por raza (Pug bajito y redondo, Chihuahua orejón, Corgi alargado, Gran Danés enorme, Poodle de pompones, Husky con cola enroscada…) y animaciones de squash & stretch al caminar, parpadeo, cola que se mueve, bigotes para veteranos, halos de rareza.
+- **Popó como sticker cómico** con animación de aparición tipo rebote, vibración cuando el cursor se acerca y absorción visual con partículas al recolectar. La popó dorada tiene halo pulsante, sparkles giratorios y carita sutil.
+- **Cartas como stickers coleccionables** ligeramente rotadas, con foil para legendarias, gradiente animado para míticas/cósmicas, etiqueta NUEVO en cartas recién obtenidas.
+- **Sobres como objetos físicos** con solapa, sello de cera y profundidad de papel.
+- **Botones tipo sticker** con sombra desplazada y rebote al pulsar.
+- **Tooltips, modales, toasts y paneles** como tarjetas de papel rotadas con sombra de mesa.
+- **Combo grande flotante** en el centro del parque con color que cambia por nivel (x2, x3, x5, x10).
+- **Fiebre del Parque** con overlay cálido pulsante y partículas flotantes.
+- **Visitantes** que cruzan el parque y dejan propinas si los perros son felices.
+- **Menú principal con diorama animado** de fondo (perros caminando, árboles, popó, camino).
+- **Sistema de partículas** central reutilizable con pool, niveles de calidad gráfica (baja/media/alta) y opción de densidad ajustable.
+
+### Opciones gráficas
+
+En el panel de Opciones puedes ajustar:
+
+- **Calidad visual**: baja / media / alta (afecta densidad de partículas).
+- **Densidad de partículas** independiente.
+- **Reducir animaciones** (modo accesibilidad).
+- **Sacudidas de pantalla** activables / desactivables.
+- **Escala de UI**.
+
+### Por qué sin librerías externas
+
+Aunque podrían usarse PixiJS, GSAP o Howler, mantener el proyecto en **HTML/CSS/Canvas 2D puro** garantiza:
+
+- Empaquetado mínimo y predecible para Steam.
+- Cero dependencias de versionado o supply-chain.
+- Compatibilidad total offline sin CDN.
+- Hot-reload trivial para desarrollo.
+
+Toda la calidad visual viene de:
+
+- Texturas procedurales en off-screen canvases (cacheadas).
+- Sistema de partículas con pool reutilizable y caps por calidad.
+- CSS variables + animaciones con curvas de overshoot.
+- Sombras compuestas y gradientes para look papel premium.
 
 ---
 

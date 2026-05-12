@@ -32,6 +32,7 @@
       <!-- ============== MENÚ PRINCIPAL ============== -->
       <section id="screen-menu" class="screen">
         <div class="menu-bg"></div>
+        <canvas id="menu-canvas"></canvas>
         <div class="menu-inner">
           <h1 class="logo-large">Popó Park</h1>
           <p class="logo-sub">Idle Simulation · Dog Breeding · Park Management</p>
@@ -83,7 +84,11 @@
           <!-- Centro: parque -->
           <section id="park-area">
             <canvas id="park-canvas" width="1080" height="720"></canvas>
-            <div id="park-overlay"></div>
+            <canvas id="particles-canvas"></canvas>
+            <div id="fever-overlay"></div>
+            <div id="park-overlay">
+              <div id="combo-float" class="hidden">x1.0</div>
+            </div>
           </section>
 
           <!-- Panel derecho -->

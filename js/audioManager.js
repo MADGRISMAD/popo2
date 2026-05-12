@@ -101,4 +101,10 @@ export const sfx = {
   bark:        () => tone({ freq: 320, freqEnd: 180, type: 'sawtooth', dur: 0.10, vol: 0.18 }),
   fight:       () => { noise({ dur: 0.10, vol: 0.20, hp: 1200 });
                        setTimeout(() => tone({ freq: 180, freqEnd: 80, type: 'square', dur: 0.10, vol: 0.18 }), 40); },
+  paperSlide:  () => noise({ dur: 0.20, vol: 0.10, hp: 2200 }),
+  stickerPop:  () => { tone({ freq: 660, freqEnd: 1320, type: 'sine', dur: 0.06, vol: 0.16 });
+                       setTimeout(() => tone({ freq: 990, type: 'sine', dur: 0.04, vol: 0.12 }), 40); },
+  confetti:    () => { noise({ dur: 0.12, vol: 0.14, hp: 1800 });
+                       setTimeout(() => tone({ freq: 660, freqEnd: 1320, type: 'triangle', dur: 0.20, vol: 0.18 }), 40);
+                       setTimeout(() => tone({ freq: 1320, freqEnd: 1760, type: 'sine', dur: 0.16, vol: 0.14 }), 160); },
 };

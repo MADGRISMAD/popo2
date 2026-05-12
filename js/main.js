@@ -37,6 +37,8 @@ import { initParkRender, render as renderPark } from './render/renderPark.js';
 import { renderHUD }       from './render/renderHUD.js';
 import { renderShop }      from './render/renderShop.js';
 import { renderInventory } from './render/renderInventory.js';
+import { initParticles, update as updateParticles, renderParticles } from './render/particles.js';
+import { initMenuRender, startMenuRender, stopMenuRender } from './render/renderMenu.js';
 
 // ---------- BOOT ----------
 window.addEventListener('DOMContentLoaded', boot);
@@ -54,6 +56,8 @@ async function boot () {
   // Render park (canvas) requiere DOM listo
   initParkRender();
   initParkHover();
+  initParticles();
+  initMenuRender();
   pettingSystem.init();
 
   // UI principal y conexiones de menú
@@ -79,14 +83,16 @@ async function boot () {
   registerUpdater(dt => comboHidden.update(dt));
 
   registerRenderer(dt => renderPark(dt));
+  registerRenderer(dt => { updateParticles(dt); renderParticles(); });
   registerRenderer(dt => renderHUD(dt));
   registerRenderer(dt => uiTick(dt));
 
   startLoop();
   startAutoSave();
 
-  // Mostrar menú
+  // Mostrar menú con diorama animado
   showScreen('screen-menu');
+  startMenuRender();
 
   // Continuar automáticamente si ya hay partida
   // (el usuario decide vía botón)
@@ -122,6 +128,7 @@ function startNewGame () {
   state.meta.paused = false;
   state.meta.started = true;
   showScreen('screen-game');
+  stopMenuRender();
   logEvent('¡Bienvenido a tu nuevo parque!', 'gold');
   save();
   // Forzar render inicial inmediato
@@ -136,6 +143,7 @@ function continueGame () {
   state.meta.paused = false;
   state.meta.started = true;
   showScreen('screen-game');
+  stopMenuRender();
   applyVolumes();
   document.body.classList.toggle('reduce-motion', !!state.options.reduceMotion);
   document.documentElement.style.setProperty('--ui-scale', state.options.uiScale);

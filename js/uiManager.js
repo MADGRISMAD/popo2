@@ -9,6 +9,7 @@ import { logEvent, subscribe as subLog } from './eventLog.js';
 import { sfx, applyVolumes, unlockAudio } from './audioManager.js';
 import { modal, toast } from './modalManager.js';
 import { platform } from './platformAdapter.js';
+import { startMenuRender, stopMenuRender } from './render/renderMenu.js';
 
 const screens = ['screen-loading', 'screen-menu', 'screen-game'];
 let _logUnsub = null;
@@ -17,6 +18,8 @@ export function showScreen (id) {
   for (const s of screens) {
     document.getElementById(s).classList.toggle('active', s === id);
   }
+  if (id === 'screen-menu') startMenuRender();
+  else                      stopMenuRender();
 }
 
 export function initUI ({ onNewGame, onContinue }) {
@@ -102,32 +105,61 @@ function confirm (msg, onYes) {
 export function openOptions () {
   const o = state.options;
   const html = `
-    <div style="display:grid; gap:10px; min-width: 420px;">
-      <label class="object-card">
-        Volumen maestro: <strong id="lbl-master">${Math.round(o.masterVolume * 100)}%</strong>
-        <input type="range" min="0" max="1" step="0.05" value="${o.masterVolume}" id="opt-master" style="width:100%;" />
-      </label>
-      <label class="object-card">
-        Volumen efectos: <strong id="lbl-sfx">${Math.round(o.sfxVolume * 100)}%</strong>
-        <input type="range" min="0" max="1" step="0.05" value="${o.sfxVolume}" id="opt-sfx" style="width:100%;" />
-      </label>
-      <label class="object-card">
-        <input type="checkbox" id="opt-sound" ${o.soundEnabled ? 'checked' : ''}/> Activar sonido
-      </label>
-      <label class="object-card">
-        Escala UI: <strong id="lbl-ui">${o.uiScale.toFixed(2)}x</strong>
-        <input type="range" min="0.8" max="1.4" step="0.05" value="${o.uiScale}" id="opt-ui" style="width:100%;" />
-      </label>
-      <label class="object-card">
-        <input type="checkbox" id="opt-rm" ${o.reduceMotion ? 'checked' : ''}/> Reducir animaciones
-      </label>
-      <label class="object-card">
-        Idioma: <select id="opt-lang">
-          <option value="es" ${o.language === 'es' ? 'selected' : ''}>Español</option>
-          <option value="en" ${o.language === 'en' ? 'selected' : ''}>English (próximamente)</option>
-        </select>
-      </label>
-      <button class="btn" id="opt-fs">${platform.isFullscreen() ? 'Salir de Pantalla Completa' : 'Pantalla Completa'}</button>
+    <div style="display:grid; gap:10px; min-width: 460px;">
+
+      <div class="object-card" style="background:#fff3c4;">
+        <div class="name">🔊 Audio</div>
+        <label style="display:block; margin-top:6px;">
+          Volumen maestro: <strong id="lbl-master">${Math.round(o.masterVolume * 100)}%</strong>
+          <input type="range" min="0" max="1" step="0.05" value="${o.masterVolume}" id="opt-master" style="width:100%; margin-top:4px;" />
+        </label>
+        <label style="display:block; margin-top:6px;">
+          Volumen efectos: <strong id="lbl-sfx">${Math.round(o.sfxVolume * 100)}%</strong>
+          <input type="range" min="0" max="1" step="0.05" value="${o.sfxVolume}" id="opt-sfx" style="width:100%; margin-top:4px;" />
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <input type="checkbox" id="opt-sound" ${o.soundEnabled ? 'checked' : ''}/> Activar sonido
+        </label>
+      </div>
+
+      <div class="object-card" style="background:#efe4ff;">
+        <div class="name">🎨 Gráficos</div>
+        <label style="display:block; margin-top:6px;">
+          Calidad visual:
+          <select id="opt-quality" style="margin-left:8px;">
+            <option value="baja"  ${o.graphicsQuality === 'baja'  ? 'selected' : ''}>Baja (rendimiento)</option>
+            <option value="media" ${o.graphicsQuality === 'media' ? 'selected' : ''}>Media (recomendado)</option>
+            <option value="alta"  ${o.graphicsQuality === 'alta'  ? 'selected' : ''}>Alta (premium)</option>
+          </select>
+        </label>
+        <label style="display:block; margin-top:8px;">
+          Densidad de partículas: <strong id="lbl-pd">${o.particleDensity.toFixed(2)}x</strong>
+          <input type="range" min="0" max="1.5" step="0.1" value="${o.particleDensity}" id="opt-pd" style="width:100%; margin-top:4px;" />
+        </label>
+        <label style="display:block; margin-top:8px;">
+          Escala UI: <strong id="lbl-ui">${o.uiScale.toFixed(2)}x</strong>
+          <input type="range" min="0.8" max="1.4" step="0.05" value="${o.uiScale}" id="opt-ui" style="width:100%; margin-top:4px;" />
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+          <input type="checkbox" id="opt-rm" ${o.reduceMotion ? 'checked' : ''}/> Reducir animaciones
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+          <input type="checkbox" id="opt-shake" ${o.screenShake ? 'checked' : ''}/> Sacudidas de pantalla
+        </label>
+      </div>
+
+      <div class="object-card">
+        <div class="name">🌐 Sistema</div>
+        <label style="display:block; margin-top:6px;">
+          Idioma:
+          <select id="opt-lang" style="margin-left:8px;">
+            <option value="es" ${o.language === 'es' ? 'selected' : ''}>Español</option>
+            <option value="en" ${o.language === 'en' ? 'selected' : ''}>English (próximamente)</option>
+          </select>
+        </label>
+        <button class="btn" id="opt-fs" style="margin-top:8px; width:100%;">${platform.isFullscreen() ? 'Salir de Pantalla Completa' : 'Pantalla Completa'}</button>
+      </div>
+
       <button class="btn danger" id="opt-delete">Borrar partida</button>
     </div>
   `;
@@ -136,8 +168,11 @@ export function openOptions () {
   document.getElementById('opt-master').oninput = e => { o.masterVolume = +e.target.value; document.getElementById('lbl-master').textContent = Math.round(o.masterVolume*100)+'%'; applyVolumes(); };
   document.getElementById('opt-sfx').oninput    = e => { o.sfxVolume    = +e.target.value; document.getElementById('lbl-sfx').textContent    = Math.round(o.sfxVolume*100)+'%';    applyVolumes(); };
   document.getElementById('opt-sound').onchange = e => { o.soundEnabled = e.target.checked; applyVolumes(); };
+  document.getElementById('opt-quality').onchange = e => { o.graphicsQuality = e.target.value; };
+  document.getElementById('opt-pd').oninput     = e => { o.particleDensity = +e.target.value; document.getElementById('lbl-pd').textContent = o.particleDensity.toFixed(2)+'x'; };
   document.getElementById('opt-ui').oninput     = e => { o.uiScale = +e.target.value; document.getElementById('lbl-ui').textContent = o.uiScale.toFixed(2)+'x'; document.documentElement.style.setProperty('--ui-scale', o.uiScale); };
   document.getElementById('opt-rm').onchange    = e => { o.reduceMotion = e.target.checked; document.body.classList.toggle('reduce-motion', o.reduceMotion); };
+  document.getElementById('opt-shake').onchange = e => { o.screenShake = e.target.checked; };
   document.getElementById('opt-lang').onchange  = e => { o.language = e.target.value; };
   document.getElementById('opt-fs').onclick     = () => { platform.toggleFullscreen(); modal.close(); openOptions(); };
   document.getElementById('opt-delete').onclick = () => {

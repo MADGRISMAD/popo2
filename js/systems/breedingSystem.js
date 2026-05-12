@@ -13,6 +13,7 @@ import { createDog, isAdult, traitMult } from './dogSystem.js';
 import { getModifiers } from './specializationSystem.js';
 import { logEvent } from '../eventLog.js';
 import { sfx } from '../audioManager.js';
+import { confetti, sparkle } from '../render/particles.js';
 
 const choice = arr => arr[Math.floor(Math.random() * arr.length)];
 const chance = p => Math.random() < p;
@@ -151,6 +152,9 @@ function handleBirth (mother) {
 
   state.stats.totalDogsBorn++;
   sfx.birth();
+  sfx.confetti();
+  confetti(baby.x, baby.y, 50);
+  sparkle(baby.x, baby.y, '#ff7ab8', 10);
   logEvent(`Nació ${baby.name} (${baby.quality})`, 'gold');
   return baby;
 }

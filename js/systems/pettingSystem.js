@@ -9,6 +9,7 @@ import { onParkClick } from '../inputManager.js';
 import { sfx } from '../audioManager.js';
 import { logEvent } from '../eventLog.js';
 import { addXP } from './dogSystem.js';
+import { burst } from '../render/particles.js';
 
 let _initialized = false;
 
@@ -47,6 +48,11 @@ export function petDog (dog, sx, sy) {
   state.stats.totalPets = (state.stats.totalPets || 0) + 1;
   addXP(dog, DOG.XP_PER_PET);
   sfx.bark();
+  burst(sx ?? dog.x, sy ?? dog.y, {
+    count: 8, color: '#ec5985', speed: 80, gravity: -120,
+    life: 0.8, size: 5, spread: Math.PI * 2,
+    shape: 'star', glow: true,
+  });
   spawnHearts(sx ?? dog.x, sy ?? dog.y);
   // Mini goal hook
   if (state.progression.miniGoal?.type === 'pet') {

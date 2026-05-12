@@ -1,51 +1,85 @@
 /* ============================================================
-   base.css — reset, tipografía global, variables CSS
+   base.css — reset, tipografía global, paleta papel-recortado
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; }
 
 :root {
-  /* Paleta */
-  --c-bg-0: #0f2308;
-  --c-bg-1: #1a3712;
-  --c-bg-2: #2c5b1c;
-  --c-bg-3: #4f7d2a;
-  --c-fg:   #f0f5e8;
-  --c-fg-muted: #b8c2a8;
-  --c-gold-0: #fbbf24;
-  --c-gold-1: #d97706;
-  --c-red-0:  #ef5350;
-  --c-red-1:  #c62828;
-  --c-purple-0: #a855f7;
-  --c-purple-1: #6d28d9;
-  --c-green-0: #66bb6a;
-  --c-green-1: #2e7d32;
-  --c-glass-bg: rgba(15, 35, 8, 0.55);
-  --c-glass-border: rgba(255, 255, 255, 0.10);
+  /* === PALETA "papel premium" ============================ */
+  /* Mesa / fondo */
+  --c-table-0:    #2a1a10;
+  --c-table-1:    #3b2616;
+  --c-table-2:    #5b3a22;
 
-  /* Rarezas */
-  --r-comun: #9ca3af;
-  --r-raro: #3b82f6;
-  --r-epico: #a855f7;
-  --r-legend: #fbbf24;
-  --r-mitico: #ef4444;
-  --r-cosmico: #ec4899;
+  /* Pasto / parque */
+  --c-grass-0:    #6ea83b;
+  --c-grass-1:    #4f8a26;
+  --c-grass-2:    #3a6b18;
+  --c-path:       #d6b27a;
+  --c-path-edge:  #a47c3f;
+
+  /* Papel UI (cremas cálidos) */
+  --c-paper-0:    #fff6dd;
+  --c-paper-1:    #fbe9b8;
+  --c-paper-2:    #f4d28b;
+  --c-paper-3:    #d8a861;
+  --c-paper-ink:  #4b2a10;
+  --c-paper-ink2: #7a4a1c;
+
+  /* Cartón */
+  --c-card-0:     #efd4a3;
+  --c-card-1:     #c79760;
+  --c-card-edge:  #8a5a25;
+
+  /* Acentos */
+  --c-accent-rose:   #ec5985;
+  --c-accent-coral:  #ff7a59;
+  --c-accent-mint:   #4ecdc4;
+  --c-accent-sky:    #5fb1ff;
+  --c-accent-violet: #8b5cf6;
+  --c-accent-amber:  #f59e0b;
+  --c-accent-gold:   #f4c430;
+
+  /* Estados */
+  --c-good:    #65b95a;
+  --c-warn:    #f59e0b;
+  --c-bad:     #ef5350;
+
+  /* Foreground */
+  --c-fg:        #fff6dd;
+  --c-fg-dark:   #4b2a10;
+  --c-fg-muted:  #b08e69;
+
+  /* Rarezas (más vivas, estilo sticker) */
+  --r-comun:    #b9b09a;
+  --r-raro:     #4d8fff;
+  --r-epico:    #a64dff;
+  --r-legend:   #ffb71a;
+  --r-mitico:   #ff4757;
+  --r-cosmico:  #ec59c2;
 
   /* Calidades genéticas */
-  --q-gris: #9ca3af;
-  --q-verde: #4ade80;
-  --q-azul: #3b82f6;
-  --q-morado: #a855f7;
-  --q-dorado: #fbbf24;
-  --q-rojo: #ef4444;
-  --q-cosmico: #ec4899;
+  --q-gris:     #b9b09a;
+  --q-verde:    #5fc66f;
+  --q-azul:     #4d8fff;
+  --q-morado:   #a64dff;
+  --q-dorado:   #ffb71a;
+  --q-rojo:     #ff4757;
+  --q-cosmico:  #ec59c2;
+
+  /* Sombra de papel (para piezas planas sobre la mesa) */
+  --paper-shadow:       0 2px 0 rgba(75,42,16,0.18), 0 6px 14px rgba(0,0,0,0.28);
+  --paper-shadow-lift:  0 4px 0 rgba(75,42,16,0.22), 0 12px 28px rgba(0,0,0,0.42);
+  --paper-shadow-down:  0 1px 0 rgba(75,42,16,0.12), 0 2px 6px rgba(0,0,0,0.22);
 
   /* Tipografía */
-  --font-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, 'Helvetica Neue', Arial, sans-serif;
+  --font-base:    'Trebuchet MS', 'Verdana', system-ui, -apple-system, sans-serif;
+  --font-display: 'Trebuchet MS', 'Verdana', system-ui, -apple-system, sans-serif;
 
   /* Escalas tamaño UI (modificable por opciones) */
   --ui-scale: 1;
+  --particle-density: 1;   /* multiplicador, modificable por opciones */
 }
 
 body {
@@ -54,25 +88,76 @@ body {
   user-select: none;
   -webkit-user-select: none;
   background:
-    radial-gradient(circle at 20% 0%, var(--c-bg-3) 0%, transparent 60%),
-    radial-gradient(circle at 80% 100%, var(--c-bg-2) 0%, transparent 60%),
-    linear-gradient(160deg, var(--c-bg-1) 0%, var(--c-bg-0) 100%);
+    radial-gradient(ellipse at 50% 35%, #5b3a22 0%, #1f140a 70%),
+    linear-gradient(180deg, #2a1a10 0%, #110a04 100%);
 }
 
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 
-/* Scrollbars elegantes */
+/* Scrollbars elegantes (estilo papel) */
 .scroll-y { overflow-y: auto; overflow-x: hidden; }
-.scroll-y::-webkit-scrollbar { width: 6px; }
-.scroll-y::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 3px; }
-.scroll-y::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 3px; }
-.scroll-y::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.30); }
+.scroll-y::-webkit-scrollbar { width: 8px; }
+.scroll-y::-webkit-scrollbar-track { background: rgba(75,42,16,0.20); border-radius: 4px; }
+.scroll-y::-webkit-scrollbar-thumb { background: var(--c-paper-3); border-radius: 4px; border: 1px solid var(--c-paper-ink2); }
+.scroll-y::-webkit-scrollbar-thumb:hover { background: var(--c-accent-amber); }
 
 .hidden { display: none !important; }
+
+/* ====== Pieza de papel reutilizable ===========================
+   Cualquier elemento con .paper se ve como una tarjeta recortada
+   sobre la mesa, con borde claro, sombra y textura sutil.
+   ============================================================ */
+.paper {
+  background-color: var(--c-paper-0);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.45) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 90%, rgba(75,42,16,0.10)  0%, transparent 70%),
+    repeating-linear-gradient(45deg,
+      rgba(75,42,16,0.020) 0px, rgba(75,42,16,0.020) 1px,
+      transparent 1px, transparent 4px),
+    repeating-linear-gradient(-45deg,
+      rgba(75,42,16,0.014) 0px, rgba(75,42,16,0.014) 1px,
+      transparent 1px, transparent 5px);
+  color: var(--c-fg-dark);
+  border: 2px solid var(--c-paper-3);
+  border-radius: 18px;
+  box-shadow: var(--paper-shadow);
+  position: relative;
+}
+
+.paper.dark {
+  background-color: #2a1a10;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.06) 0%, transparent 60%),
+    repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px,
+      transparent 1px, transparent 4px);
+  color: var(--c-fg);
+  border-color: var(--c-card-edge);
+}
+
+/* Pequeñas etiquetas tipo sticker pegado en la esquina */
+.paper-tag {
+  position: absolute;
+  top: -8px; right: 14px;
+  background: var(--c-accent-rose);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+  transform: rotate(-3deg);
+}
+
+/* Glass legacy (queda compatible, pero ahora con look papel) */
 .glass {
-  background: var(--c-glass-bg);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid var(--c-glass-border);
+  background: rgba(255, 246, 221, 0.94);
+  color: var(--c-fg-dark);
+  border: 2px solid var(--c-paper-3);
+  border-radius: 18px;
+  box-shadow: var(--paper-shadow);
 }

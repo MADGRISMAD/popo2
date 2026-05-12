@@ -11,6 +11,7 @@ import { traitMult } from './dogSystem.js';
 import { getModifiers } from './specializationSystem.js';
 import { logEvent } from '../eventLog.js';
 import { onParkMove, onParkClick } from '../inputManager.js';
+import { burst, sparkle, trail, confetti } from '../render/particles.js';
 
 let _nextPoopId = 1;
 let _initialized = false;
@@ -79,17 +80,29 @@ function collectAround (x, y, radius) {
   let collected = 0;
   let totalValue = 0;
   let golden = false;
+  let goldCount = 0;
   for (const p of state.park.poops) {
     const dx = p.x - x, dy = p.y - y;
     if (dx * dx + dy * dy <= r2) {
       collected++;
       totalValue += p.value;
-      if (p.golden) golden = true;
+      if (p.golden) { golden = true; goldCount++; }
+      // Partículas de absorción en cada popó recogida
+      burst(p.x, p.y, {
+        count: p.golden ? 12 : 5,
+        color: p.golden ? '#ffe27a' : '#7a4a1c',
+        speed: 90, gravity: -60, life: 0.45,
+        size: 2.6, spread: Math.PI * 2, glow: p.golden,
+        shape: p.golden ? 'star' : 'circle',
+      });
     } else remaining.push(p);
   }
   if (collected === 0) return;
   state.park.poops = remaining;
   applyPick(collected, totalValue, golden, x, y);
+  if (goldCount > 0) sparkle(x, y, '#ffe27a', 16);
+  // Estela hacia el cursor mientras hay combo
+  if (state.combo.multiplier > 1.5) trail(x, y, '#ffe27a');
 }
 
 function applyPick (count, totalValue, golden, x, y) {
@@ -110,6 +123,8 @@ function applyPick (count, totalValue, golden, x, y) {
     state.fever.activeUntil = now + ECONOMY.FEVER_DURATION_MS;
     sfx.fever();
     logEvent('¡FIEBRE DEL PARQUE activada! ✨', 'gold');
+    // Confeti grande en el centro del parque
+    confetti(PARK.W / 2, PARK.H / 2, 80);
   }
 
   // Final value con combo + fiebre
@@ -137,13 +152,12 @@ function spawnFloatLabel (cx, cy, text, gold) {
   const px = (cx / canvas.width) * rect.width + (rect.left - ovRect.left);
   const py = (cy / canvas.height) * rect.height + (rect.top - ovRect.top);
   const el = document.createElement('div');
-  el.className = 'float-label';
+  el.className = 'float-label' + (gold ? ' golden' : '');
   el.style.left = px + 'px';
   el.style.top = py + 'px';
-  el.style.color = gold ? '#fbbf24' : '#fff';
   el.textContent = text;
   overlay.appendChild(el);
-  setTimeout(() => el.remove(), 1400);
+  setTimeout(() => el.remove(), 1500);
 }
 
 // ---------- Update por frame ----------

@@ -25,6 +25,9 @@ export const state = {
     reduceMotion: false,
     language: 'es',
     fullscreen: false,
+    graphicsQuality: 'media',     // 'baja' | 'media' | 'alta'
+    particleDensity: 1.0,         // 0..1.5
+    screenShake: true,
   },
 
   resources: {
