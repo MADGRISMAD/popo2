@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.4.0 — Teatro de papel (estilo Paper Mario)
+
+### Parque
+- Nueva vista lateral en perspectiva, con proyección mundo↔pantalla (`render/projection.js`). La lógica y el guardado no cambian.
+- Fondo de cartulina: cielo, sol con carita, nubes animadas, colinas con canto, arbolitos piruleta, seto, césped a franjas y camino ondulado.
+- Árboles y arbustos como recortes de pie con borde blanco. Platos de perfil, visitantes de papel y zona de crianza como alfombra.
+- Todo lo que está de pie se ordena por profundidad.
+- Telón rojo y bambalina enmarcando el escenario.
+
+### Perros
+- Rediseño completo: figuras de papel de perfil con borde de pegatina, cabeza grande, ojo ovalado, mejillas y collar del color de la rareza.
+- Silueta por raza más detalles únicos (corona, antena/visor, tres cabezas, ojos brillantes, estrellas, máscara, manchas de dálmata, pompones).
+- Giro de papel al cambiar de dirección (se ve el reverso), saltitos al caminar y respiración en reposo.
+- Bocadillos de estado y nube de pelea.
+- Retratos para cartas, sobres, crianza y colección (siluetas para lo no descubierto).
+
+### Interfaz
+- Paleta nueva: tinta índigo, papel blanco y colores planos saturados.
+- Teatro: muro con estrellas, telón y tablas de madera para el registro.
+- Paneles, modales, toasts y tooltips como hojas de papel con contorno grueso y sombra dura.
+- Títulos en cintas de color y botones tipo comando de batalla.
+- Sobres en formato horizontal con contador.
+- Los avisos caen sobre el cielo del escenario (máximo 3 a la vez) y ya no tapan los paneles.
+- El menú principal es un escenario con perros de papel paseando.
+- Popó como pegatina con carita. La dorada y la arcoíris brillan.
+
 ## v0.3.0 — Modo adictivo
 
 ### Nuevos ganchos

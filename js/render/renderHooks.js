@@ -4,6 +4,7 @@
 // ============================================================
 
 import { getBox } from '../systems/hookSystem.js';
+import { project } from './projection.js';
 
 export function renderMysteryBox (ctx) {
   const b = getBox();
@@ -27,8 +28,11 @@ export function renderMysteryBox (ctx) {
   if (left < 3 && Math.sin(t * (left < 1.2 ? 40 : 20)) < 0) return;
 
   const bob = age > 0.8 ? Math.sin(t * 3) * 3 : 0;
+  const pr = project(b.x, b.y);
+  const k = pr.s * 1.25;
   ctx.save();
-  ctx.translate(b.x, b.y);
+  ctx.translate(pr.x, pr.y - 22 * k);
+  ctx.scale(k, k);
 
   // Haz de luz giratorio
   if (age > 0.5) {
@@ -51,15 +55,19 @@ export function renderMysteryBox (ctx) {
 
   // Sombra
   const shadowK = age < 0.5 ? age / 0.5 : 1;
-  ctx.fillStyle = `rgba(0,0,0,${0.3 * shadowK})`;
+  ctx.fillStyle = `rgba(30,20,60,${0.3 * shadowK})`;
   ctx.beginPath(); ctx.ellipse(3, 22, 22 * shadowK, 6 * shadowK, 0, 0, Math.PI * 2); ctx.fill();
 
   ctx.translate(0, yOff + bob);
   ctx.scale(squash, 2 - squash);
   ctx.rotate(Math.sin(t * 6) * 0.06);
 
-  // Caja (papel recortado)
+  // Caja (papel recortado con borde blanco)
   const W = 38, H = 32;
+  ctx.fillStyle = '#ffffff';
+  roundRect(ctx, -W / 2 - 8, -H / 2 - 12, W + 16, H + 18, 9); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(-8, -H / 2 - 12, 11, 8, -0.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse( 8, -H / 2 - 12, 11, 8,  0.5, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#7a1a3a';
   roundRect(ctx, -W / 2 - 2, -H / 2 + 2, W + 4, H + 4, 6); ctx.fill();
   ctx.fillStyle = '#ec5985';
@@ -89,19 +97,19 @@ export function renderMysteryBox (ctx) {
     const a = Math.random() * Math.PI * 2;
     const r = 26 + Math.random() * 18;
     ctx.fillStyle = '#fff6dd';
-    ctx.beginPath(); ctx.arc(b.x + Math.cos(a) * r, b.y + Math.sin(a) * r, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(pr.x + Math.cos(a) * r * k, pr.y - 22 * k + Math.sin(a) * r * k, 2, 0, Math.PI * 2); ctx.fill();
   }
 
   // Cuenta atrás
   if (age > 0.8) {
     ctx.save();
-    ctx.font = '900 12px Trebuchet MS, sans-serif';
+    ctx.font = '900 14px "Arial Rounded MT Bold", Trebuchet MS, sans-serif';
     ctx.textAlign = 'center';
-    ctx.lineWidth = 3; ctx.strokeStyle = '#4b2a10';
+    ctx.lineWidth = 5; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2d2748';
     const label = '¡Atrápala! ' + Math.ceil(left) + 's';
-    ctx.strokeText(label, b.x, b.y + 40);
-    ctx.fillStyle = left < 3 ? '#ffb4b4' : '#fff6dd';
-    ctx.fillText(label, b.x, b.y + 40);
+    ctx.strokeText(label, pr.x, pr.y + 18);
+    ctx.fillStyle = left < 3 ? '#ffb4b4' : '#ffffff';
+    ctx.fillText(label, pr.x, pr.y + 18);
     ctx.restore();
   }
 }

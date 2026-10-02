@@ -18,6 +18,7 @@ import { gainXP } from './hookSystem.js';
 import { HOOKS, PARK } from '../config.js';
 import { confetti } from '../render/particles.js';
 import { shake, flash } from '../render/juice.js';
+import { dogPortrait } from '../render/renderDogs.js';
 
 const choice = arr => arr[Math.floor(Math.random() * arr.length)];
 
@@ -241,7 +242,7 @@ function renderRevealCard (r) {
     const d = r.dog;
     const rarityCls = RARITIES_BY_ID[d.rarity].className;
     return `<div class="card ${rarityCls}">
-      <div class="card-thumb"><span style="font-size:36px">${dogEmoji(d)}</span></div>
+      <div class="card-thumb"><img class="dog-portrait" src="${dogPortrait(d)}" alt=""></div>
       <div class="card-name">${d.name}</div>
       <div class="card-meta"><span>${RARITIES_BY_ID[d.rarity].name}</span><span>${d.sex === 'M' ? '♂' : '♀'}</span></div>
       <div class="card-quality q-${d.quality}"></div>

@@ -103,23 +103,18 @@ popo-park/
 
 ---
 
-## Dirección artística — diorama de papel
+## Dirección artística — teatro de papel (estilo Paper Mario)
 
-El juego se ve como una maqueta hecha de papel recortado y stickers premium:
+El juego se ve como una obra de teatro hecha de papel recortado:
 
-- **Texturas de papel procedurales** generadas en runtime (`js/render/paperTexture.js`).
-- **Pasto, caminos y árboles** renderizados como capas con sombras desplazadas y bordes oscuros estilo pieza recortada.
-- **Perros** con silueta distinta por raza (Pug bajito y redondo, Chihuahua orejón, Corgi alargado, Gran Danés enorme, Poodle de pompones, Husky con cola enroscada…) y animaciones de squash & stretch al caminar, parpadeo, cola que se mueve, bigotes para veteranos, halos de rareza.
-- **Popó como sticker cómico** con animación de aparición tipo rebote, vibración cuando el cursor se acerca y absorción visual con partículas al recolectar. La popó dorada tiene halo pulsante, sparkles giratorios y carita sutil.
-- **Cartas como stickers coleccionables** ligeramente rotadas, con foil para legendarias, gradiente animado para míticas/cósmicas, etiqueta NUEVO en cartas recién obtenidas.
-- **Sobres como objetos físicos** con solapa, sello de cera y profundidad de papel.
-- **Botones tipo sticker** con sombra desplazada y rebote al pulsar.
-- **Tooltips, modales, toasts y paneles** como tarjetas de papel rotadas con sombra de mesa.
-- **Combo grande flotante** en el centro del parque con color que cambia por nivel (x2, x3, x5, x10).
-- **Fiebre del Parque** con overlay cálido pulsante y partículas flotantes.
-- **Visitantes** que cruzan el parque y dejan propinas si los perros son felices.
-- **Menú principal con diorama animado** de fondo (perros caminando, árboles, popó, camino).
-- **Sistema de partículas** central reutilizable con pool, niveles de calidad gráfica (baja/media/alta) y opción de densidad ajustable.
+- **Escenario en perspectiva** (`js/render/projection.js`): la lógica sigue en coordenadas de mundo (vista cenital 1080×720), pero todo se proyecta a una vista lateral. El fondo queda arriba y pequeño, y el frente abajo y grande. El cursor se convierte de vuelta a coordenadas de mundo, así que la recolección no cambia.
+- **Fondo de cartulina**: cielo, sol con carita, nubes que se mueven, colinas con canto de cartón, arbolitos piruleta, seto y césped a franjas. Se pre-renderiza una vez.
+- **Perros como figuras de papel de perfil** (`js/render/renderDogs.js`): borde blanco de pegatina, cabeza grande, ojo ovalado con brillo, mejillas, collar del color de su rareza y silueta propia por raza (orejas, cola, hocico, máscara, manchas). Detalles especiales: corona del Áurodog, antena y visor del Cyberdog, tres cabezas del Cerbero, ojos brillantes de Fenrir.
+- **Giro de papel**: al cambiar de dirección, el perro gira como una hoja y a mitad del giro se ve el reverso blanco. Al caminar va dando saltitos.
+- **Bocadillos** sobre los perros (Zz, ♥, 🦴) y **nube de pelea** con estrellas.
+- **Retratos generados** con el mismo dibujo para cartas, sobres, crianza y la colección (siluetas para las razas sin descubrir).
+- **Todo de pie y ordenado por profundidad**: árboles, arbustos, platos, visitantes, popós y perros.
+- **UI de teatro**: muro índigo con estrellas, telón rojo enmarcando el parque y tablas de madera para el registro. Paneles de papel con contorno grueso, cintas de color como títulos y botones tipo comando de batalla con sombra dura.
 
 ### Opciones gráficas
 

@@ -10,6 +10,7 @@ import { sfx } from '../audioManager.js';
 import { logEvent } from '../eventLog.js';
 import { addXP } from './dogSystem.js';
 import { burst } from '../render/particles.js';
+import { toOverlayPct, project } from '../render/projection.js';
 
 let _initialized = false;
 
@@ -24,19 +25,24 @@ function handleClick (p) {
   // Solo acariciamos si NO había popó cerca (la prioridad es recolectar)
   if (state.park.poops.some(pp => Math.hypot(pp.x - p.x, pp.y - p.y) < 26)) return;
 
-  const dog = findDogAt(p.x, p.y);
+  const dog = findDogAtScreen(p.sx, p.sy);
   if (!dog) return;
-  petDog(dog, p.x, p.y);
+  petDog(dog, dog.x, dog.y);
 }
 
-function findDogAt (x, y) {
-  for (let i = state.park.activeDogs.length - 1; i >= 0; i--) {
-    const d = state.dogs.map[state.park.activeDogs[i]];
+// Hit-test en pantalla: el perro está de pie, su cuerpo queda por encima de los pies
+export function findDogAtScreen (sx, sy) {
+  if (sx == null) return null;
+  let best = null, bestY = -Infinity;
+  for (const id of state.park.activeDogs) {
+    const d = state.dogs.map[id];
     if (!d) continue;
-    const r = d.age === 'baby' ? 18 : d.age === 'young' ? 22 : 26;
-    if ((d.x - x) ** 2 + (d.y - y) ** 2 <= r * r) return d;
+    const pr = project(d.x, d.y);
+    const k = pr.s * 1.6 * (d.age === 'baby' ? 0.58 : d.age === 'young' ? 0.8 : 1);
+    const cx = pr.x, cy = pr.y - 28 * k;
+    if (Math.abs(sx - cx) <= 32 * k && Math.abs(sy - cy) <= 30 * k && d.y > bestY) { best = d; bestY = d.y; }
   }
-  return null;
+  return best;
 }
 
 export function petDog (dog, sx, sy) {
@@ -64,16 +70,12 @@ export function petDog (dog, sx, sy) {
 function spawnHearts (cx, cy) {
   const overlay = document.getElementById('park-overlay');
   if (!overlay) return;
-  const canvas = document.getElementById('park-canvas');
-  const rect = canvas.getBoundingClientRect();
-  const ovRect = overlay.getBoundingClientRect();
   for (let i = 0; i < 3; i++) {
-    const px = (cx / canvas.width) * rect.width + (rect.left - ovRect.left) + (Math.random() * 24 - 12);
-    const py = (cy / canvas.height) * rect.height + (rect.top - ovRect.top);
+    const pos = toOverlayPct(cx + (Math.random() * 24 - 12), cy, 60);
     const el = document.createElement('div');
     el.className = 'float-label';
-    el.style.left = px + 'px';
-    el.style.top = py + 'px';
+    el.style.left = pos.left + '%';
+    el.style.top = pos.top + '%';
     el.style.color = '#f472b6';
     el.style.fontSize = '20px';
     el.textContent = '♥';

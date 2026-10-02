@@ -5,7 +5,7 @@
 
 export const GAME = Object.freeze({
   NAME: 'Popó Park',
-  VERSION: '0.3.0',
+  VERSION: '0.4.0',
   SAVE_VERSION: 1,
   SAVE_KEY: 'popo-park-save',
   AUTO_SAVE_MS: 20_000,

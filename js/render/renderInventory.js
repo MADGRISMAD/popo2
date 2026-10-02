@@ -18,6 +18,7 @@ import { buyParkObject } from '../systems/parkSystem.js';
 import { chooseSpecialization } from '../systems/specializationSystem.js';
 import { renderBreeding } from './renderBreeding.js';
 import { renderCollection } from './renderCollection.js';
+import { dogPortrait } from './renderDogs.js';
 
 const TABS = [
   { id: 'shop',      name: 'Sobres' },
@@ -70,13 +71,12 @@ function renderTabContent () {
 // ---------- Tabs ----------
 function renderShopTab () {
   return `
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <div class="pack-list">
       ${PACK_TYPES.map(p => `
         <div class="pack ${p.className}">
-          <div class="pack-icon">${p.icon}</div>
-          <div class="pack-name">${p.name}</div>
+          <div class="pack-icon">${p.icon}${(state.resources.packs[p.id] || 0) > 0 ? `<span class="pack-count">${state.resources.packs[p.id]}</span>` : ''}</div>
+          <div class="pack-head"><div class="pack-name">${p.name}</div><div class="pack-price">💩 ${p.cost.toLocaleString('es')}</div></div>
           <div class="pack-desc">${p.desc}</div>
-          <div class="pack-price">💩 ${p.cost.toLocaleString('es')}</div>
           <div class="pack-actions">
             <button class="btn small" data-buy="${p.id}" data-qty="1" ${state.resources.poop < p.cost ? 'disabled' : ''}>Comprar 1</button>
             <button class="btn small purple" data-buy="${p.id}" data-qty="10" ${state.resources.poop < p.cost * 10 ? 'disabled' : ''}>Comprar 10</button>
@@ -129,7 +129,7 @@ function dogCard (d) {
   const xpPct = Math.min(100, ((d.xp || 0) / xpNext) * 100);
 
   return `<div class="card ${r.className}" data-tooltip="${tooltip}">
-    <div class="card-thumb"><span style="font-size:30px">${dogIcon(d)}</span></div>
+    <div class="card-thumb"><img class="dog-portrait" src="${dogPortrait(d)}" alt=""></div>
     <div class="card-name">${d.name} ${d.sex === 'M' ? '♂' : '♀'}</div>
     <div class="card-meta"><span>${r.name}</span><span>Nv ${d.level || 1}</span></div>
     <div class="progress-bar" style="height:3px; margin-top:2px;"><div class="progress-fill" style="width:${xpPct}%; background: linear-gradient(90deg,#60a5fa,#a855f7);"></div></div>

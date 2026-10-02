@@ -17,11 +17,12 @@
 #topbar .stat.level > * { position: relative; z-index: 1; }
 .level-fill {
   position: absolute; left: 0; top: 0; bottom: 0;
-  background: linear-gradient(90deg, #60a5fa, #a855f7);
-  opacity: 0.45; transition: width 0.25s ease;
+  background: repeating-linear-gradient(-45deg, #b9d6ff 0 10px, #d4e6ff 10px 20px);
+  transition: width 0.25s ease;
   z-index: 0;
 }
-.level-xp { font-size: 10px; font-weight: 800; color: var(--c-paper-ink2); }
+.level-xp { font-size: 11px; font-weight: 900; color: var(--ink-2); }
+#topbar .stat.level .ico { background: var(--yellow); }
 #topbar .stat.level.level-up { animation: levelChip 0.9s ease; }
 @keyframes levelChip {
   0%   { transform: scale(1); box-shadow: 0 0 0 rgba(255,226,122,0); }
@@ -30,11 +31,9 @@
 }
 
 /* ---------- Botón ruleta ---------- */
-#topbar .wheel-btn { padding: 6px 12px; font-size: 16px; }
+#topbar .wheel-btn { padding: 6px 14px; font-size: 18px; border-radius: 999px; }
 #topbar .wheel-btn.has-spins {
-  background: linear-gradient(180deg, #ffd56a, #d97706);
-  border-color: #92400e;
-  box-shadow: 0 3px 0 #92400e, 0 0 18px rgba(244,196,48,0.7);
+  --b: var(--yellow); --bd: var(--yellow-d);
   animation: wheelWiggle 1.6s ease-in-out infinite;
 }
 @keyframes wheelWiggle {
@@ -50,12 +49,12 @@
   position: relative; overflow: hidden;
   display: flex; align-items: center; gap: 6px;
   padding: 5px 10px;
-  border-radius: 10px;
-  border: 2px solid white;
+  border-radius: 999px;
+  border: 3px solid var(--ink);
   background: var(--buff-color);
-  color: white; font-weight: 900; font-size: 12px;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
-  box-shadow: 0 0 14px var(--buff-color), 0 2px 0 rgba(0,0,0,0.25);
+  color: white; font-weight: 900; font-size: 13px;
+  text-shadow: 0 2px 0 rgba(20,12,48,0.4);
+  box-shadow: 0 4px 0 var(--ink);
   animation: bannerPulse 0.6s ease-in-out infinite alternate;
   white-space: nowrap;
 }
@@ -80,16 +79,17 @@
   animation: bannerIn 1.3s cubic-bezier(.2,.9,.2,1.3) forwards;
 }
 .juice-banner .jb-main {
-  font-size: 64px; font-weight: 900; letter-spacing: -2px;
+  font-size: 64px; font-weight: 900; letter-spacing: -1px;
   color: var(--banner-color);
   text-shadow:
-    -4px -4px 0 #4b2a10, 4px -4px 0 #4b2a10, -4px 4px 0 #4b2a10, 4px 4px 0 #4b2a10,
-    0 8px 0 rgba(0,0,0,0.35), 0 0 30px var(--banner-color);
+    -4px -4px 0 var(--ink), 4px -4px 0 var(--ink), -4px 4px 0 var(--ink), 4px 4px 0 var(--ink),
+    -4px 0 0 var(--ink), 4px 0 0 var(--ink), 0 -4px 0 var(--ink), 0 4px 0 var(--ink), 6px 10px 0 rgba(20,12,48,0.45);
 }
 .juice-banner .jb-sub {
   margin-top: 4px;
-  font-size: 18px; font-weight: 900; color: #fff6dd;
-  text-shadow: -2px -2px 0 #4b2a10, 2px -2px 0 #4b2a10, -2px 2px 0 #4b2a10, 2px 2px 0 #4b2a10;
+  font-size: 18px; font-weight: 900; color: var(--ink);
+  background: #fff; border: 3px solid var(--ink); border-radius: 999px;
+  display: inline-block; padding: 3px 14px; box-shadow: 0 4px 0 var(--ink);
 }
 .juice-banner.combo { top: 22%; }
 .juice-banner.combo .jb-main { font-size: 46px; }
@@ -135,17 +135,17 @@
 /* ---------- Tienda: "casi lo tienes" ---------- */
 .shop-item { position: relative; }
 .shop-item.affordable {
-  border-color: #3d9742 !important;
+  background: #eaffef;
   animation: affordGlow 1.6s ease-in-out infinite;
 }
-.shop-item.affordable button { background: linear-gradient(180deg, #76d177, #3d9742); color: white; border-color: #2a6b2c; text-shadow: 0 1px 0 rgba(0,0,0,0.3); }
-.shop-item.almost { border-color: var(--c-accent-amber) !important; }
+.shop-item.affordable button { --b: var(--green); --bd: var(--green-d); --bt: #fff; text-shadow: 0 2px 0 var(--green-d); }
+.shop-item.almost { background: #fff8dc; }
 @keyframes affordGlow {
-  0%, 100% { box-shadow: 0 2px 0 #2a6b2c, 0 0 0 rgba(95,198,111,0); }
-  50%      { box-shadow: 0 2px 0 #2a6b2c, 0 0 16px rgba(95,198,111,0.85); }
+  0%, 100% { box-shadow: 0 4px 0 var(--ink), 0 0 0 0 rgba(57,201,91,0); }
+  50%      { box-shadow: 0 4px 0 var(--ink), 0 0 0 5px rgba(57,201,91,0.45); }
 }
-.afford-bar { height: 4px; width: 120px; background: rgba(75,42,16,0.15); border-radius: 3px; overflow: hidden; margin-top: 3px; }
-.afford-fill { height: 100%; background: linear-gradient(90deg, var(--c-accent-amber), #3d9742); }
+.afford-bar { height: 8px; width: 120px; background: #fff; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; margin-top: 3px; }
+.afford-fill { height: 100%; background: var(--yellow); }
 .shop-item.almost .afford-fill { animation: feverPulse 0.8s ease-in-out infinite; }
 
 /* ---------- Footer: altura fija (antes empujaba el parque) ---------- */
@@ -159,12 +159,12 @@
   position: absolute; left: 50%; top: -6px; transform: translateX(-50%);
   width: 0; height: 0;
   border-left: 18px solid transparent; border-right: 18px solid transparent;
-  border-top: 38px solid #ec5985;
-  filter: drop-shadow(0 3px 0 #7a1a3a) drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  border-top: 38px solid var(--red);
+  filter: drop-shadow(0 -3px 0 var(--ink)) drop-shadow(3px 0 0 var(--ink)) drop-shadow(-3px 0 0 var(--ink)) drop-shadow(0 4px 0 var(--ink));
 }
 .wheel-side { display: flex; flex-direction: column; gap: 12px; min-width: 240px; color: var(--c-paper-ink); }
 .wheel-spins { font-size: 18px; font-weight: 800; }
-.wheel-spins strong { font-size: 26px; color: #d97706; }
+.wheel-spins strong { font-size: 28px; color: var(--yellow); text-shadow: var(--text-outline); }
 .wheel-result { font-size: 20px; font-weight: 900; min-height: 52px; }
 .wheel-result.pop { animation: sticker-pop 0.5s cubic-bezier(.2,.9,.2,1.4); }
 .wheel-free { font-size: 12px; color: var(--c-paper-ink2); font-weight: 700; }
@@ -179,17 +179,17 @@
 .daily-lost { color: #c43d36; font-weight: 800; margin-bottom: 8px; }
 .daily-grid { display: grid; grid-template-columns: repeat(7, 84px); gap: 8px; justify-content: center; margin: 12px 0; }
 .daily-cell {
-  background: var(--c-paper-1); border: 2px solid var(--c-paper-3); border-radius: 12px;
-  padding: 8px 4px; box-shadow: 0 2px 0 var(--c-paper-3);
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  padding: 8px 4px; box-shadow: 0 4px 0 var(--ink);
 }
 .daily-cell.done { opacity: 0.55; }
 .daily-cell.today {
-  border-color: #ec5985; background: #fff0f5;
+  background: #ffe3ee;
   transform: scale(1.1) rotate(-2deg);
-  box-shadow: 0 3px 0 #ec5985, 0 0 18px rgba(236,89,133,0.6);
+  box-shadow: 0 4px 0 var(--ink), 0 0 0 4px var(--pink);
   animation: heartbeat 1.4s ease-in-out infinite;
 }
-.daily-cell.big { background: linear-gradient(160deg, #ffe7a0, #ffc94a); }
+.daily-cell.big { background: var(--yellow); }
 .daily-day { font-size: 11px; font-weight: 800; color: var(--c-paper-ink2); }
 .daily-ico { font-size: 28px; margin: 4px 0; }
 .daily-lbl { font-size: 11px; font-weight: 800; }
@@ -199,7 +199,7 @@
 /* ---------- Ganancias offline ---------- */
 .offline-wrap { text-align: center; color: var(--c-paper-ink); display: grid; gap: 10px; padding: 6px 20px; }
 .offline-ico { font-size: 48px; }
-.offline-amount { font-size: 48px; font-weight: 900; color: #d97706; text-shadow: 0 3px 0 rgba(75,42,16,0.25); }
+.offline-amount { font-size: 52px; font-weight: 900; color: var(--yellow); text-shadow: var(--text-outline); }
 
 /* ---------- Sobres: cartas que se voltean ---------- */
 .pack-burst { font-size: 56px; margin-bottom: 6px; animation: packBurst 0.6s cubic-bezier(.2,.9,.2,1.5); }
@@ -220,16 +220,16 @@
 .flip-back {
   position: absolute; inset: 0;
   border-radius: 14px;
-  border: 3px solid var(--glow);
+  border: 4px solid var(--ink);
   background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 6px, transparent 6px 12px),
-    linear-gradient(160deg, #6b3fa0, #2a0d57);
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0 22px, transparent 23px),
+    repeating-conic-gradient(from 0deg, var(--purple) 0 15deg, #8247f0 15deg 30deg);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.35), 0 0 16px var(--glow);
+  box-shadow: inset 0 0 0 4px var(--glow), 3px 5px 0 rgba(20,12,48,0.4), 0 0 18px var(--glow);
   z-index: 2;
 }
-.flip-back span { font-size: 46px; font-weight: 900; color: #fff6dd; text-shadow: 0 3px 0 rgba(0,0,0,0.4); }
-.flip.tier-0 .flip-back { box-shadow: 0 3px 0 rgba(0,0,0,0.35); }
+.flip-back span { font-size: 50px; font-weight: 900; color: var(--yellow); text-shadow: var(--text-outline); }
+.flip.tier-0 .flip-back { box-shadow: inset 0 0 0 4px #fff, 3px 5px 0 rgba(20,12,48,0.4); }
 .flip.tier-3 .flip-back, .flip.tier-4 .flip-back, .flip.tier-5 .flip-back { animation: pulseGlow 0.9s ease-in-out infinite; color: var(--glow); }
 .flip.charging .flip-inner { animation: chargeShake 0.12s linear infinite; }
 .flip.charging .flip-back { box-shadow: 0 0 40px var(--glow), 0 0 80px var(--glow); }
@@ -246,9 +246,9 @@
 /* ---------- Contador en pestañas ---------- */
 .tab { position: relative; }
 .tab-badge {
-  position: absolute; top: -7px; right: -6px;
-  background: var(--c-accent-rose); color: white;
-  border: 2px solid white; border-radius: 10px;
+  position: absolute; top: -10px; right: -7px;
+  background: var(--red); color: white;
+  border: 2.5px solid var(--ink); border-radius: 10px;
   padding: 0 6px; font-size: 10px; font-weight: 900; line-height: 16px;
   box-shadow: 0 2px 0 rgba(0,0,0,0.25);
 }

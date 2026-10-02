@@ -12,7 +12,7 @@ import { getModifiers } from './specializationSystem.js';
 import { logEvent } from '../eventLog.js';
 import { onParkMove, onParkClick } from '../inputManager.js';
 import { burst, sparkle, trail, confetti } from '../render/particles.js';
-import { shake, flash, banner, fmt } from '../render/juice.js';
+import { shake, flash, banner, fmt, floatText } from '../render/juice.js';
 import {
   gainXP, recordEarn, buffValueMult, buffMagnet, buffGoldChance,
   tryCollectBox, onComboPick, setRainImpl,
@@ -217,20 +217,7 @@ function checkFever (now = performance.now()) {
 
 // ---------- Etiquetas flotantes "+25" ----------
 function spawnFloatLabel (cx, cy, text, cls = '') {
-  const overlay = document.getElementById('park-overlay');
-  if (!overlay) return;
-  const canvas = document.getElementById('park-canvas');
-  const rect = canvas.getBoundingClientRect();
-  const ovRect = overlay.getBoundingClientRect();
-  const px = (cx / canvas.width) * rect.width + (rect.left - ovRect.left);
-  const py = (cy / canvas.height) * rect.height + (rect.top - ovRect.top);
-  const el = document.createElement('div');
-  el.className = 'float-label' + (cls ? ' ' + cls : '');
-  el.style.left = px + 'px';
-  el.style.top = py + 'px';
-  el.textContent = text;
-  overlay.appendChild(el);
-  setTimeout(() => el.remove(), 1500);
+  floatText(cx, cy, text, cls);
 }
 
 // ---------- Update por frame ----------

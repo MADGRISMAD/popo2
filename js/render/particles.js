@@ -6,6 +6,7 @@
 
 import { state } from '../gameState.js';
 import { PARK } from '../config.js';
+import { project } from './projection.js';
 
 let canvas = null;
 let ctx = null;
@@ -166,7 +167,10 @@ export function renderParticles () {
       ctx.shadowBlur  = 10;
     }
     ctx.fillStyle = p.color;
-    ctx.translate(p.x, p.y);
+    // Las partículas viven en coords de mundo: se proyectan al escenario
+    const pr = project(p.x, p.y);
+    ctx.translate(pr.x, pr.y - 12 * pr.s);
+    ctx.scale(pr.s * 1.2, pr.s * 1.2);
     ctx.rotate(p.rot);
     if (p.shape === 'square') {
       ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.4);

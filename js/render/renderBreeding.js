@@ -2,6 +2,7 @@
 // render/renderBreeding.js — pestaña / modal de crianza.
 // ============================================================
 
+import { dogPortrait } from './renderDogs.js';
 import { state } from '../gameState.js';
 import { storedDogs, activeDogs, isAdult } from '../systems/dogSystem.js';
 import { canStartBreeding, startBreeding, compatibility } from '../systems/breedingSystem.js';
@@ -102,7 +103,7 @@ function slotCard (d, kind, selected) {
   const r = RARITIES_BY_ID[d.rarity];
   const traits = (d.traits || []).slice(0, 2).map(t => TRAITS_BY_ID[t]?.icon || '').join(' ');
   return `<div class="card ${r.className}" style="${selected ? 'outline: 2px solid var(--c-gold-0);' : ''}" data-tooltip="${d.name} · ${r.name}<br>Calidad: ${QUALITIES_BY_ID[d.quality].name}<br>Felicidad: ${d.happiness.toFixed(0)}">
-    <div class="card-thumb" style="font-size:24px; color:${kind === 'm' ? '#60a5fa' : '#f472b6'};">${kind === 'm' ? '♂' : '♀'}</div>
+    <div class="card-thumb"><img class="dog-portrait" src="${dogPortrait(d)}" alt=""><span class="sex-badge ${kind}">${kind === 'm' ? '♂' : '♀'}</span></div>
     <div class="card-name">${d.name}</div>
     <div class="card-meta"><span>${r.name}</span><span>${QUALITIES_BY_ID[d.quality].name}</span></div>
     <div class="card-meta"><span>${traits}</span><span>Nv ${d.level || 1}</span></div>

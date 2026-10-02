@@ -5,18 +5,19 @@
 import { state } from '../gameState.js';
 import { BREEDS, BREEDS_BY_ID, RARITIES_BY_ID, QUALITIES_BY_ID } from '../data/dogs.js';
 import { BREEDING_RECIPES } from '../data/breedingRecipes.js';
+import { dogPortrait } from './renderDogs.js';
 
 export function renderCollection (wrap) {
   const breedsHtml = BREEDS.map(b => {
     const slot = state.collection.breeds[b.id];
     if (!slot?.discovered) {
       return `<div class="collection-cell locked">
-        <div class="silhouette">❓</div>
+        <div class="silhouette"><img class="dog-portrait" src="${dogPortrait({ breed: b.id, rarity: b.rarity, age: 'adult' }, { silhouette: true })}" alt=""></div>
         <div>?????</div>
       </div>`;
     }
     return `<div class="collection-cell">
-      <div class="silhouette">🐕</div>
+      <div class="silhouette"><img class="dog-portrait" src="${dogPortrait({ breed: b.id, rarity: b.rarity, age: 'adult' })}" alt=""></div>
       <div><strong>${b.name}</strong></div>
       <div style="font-size:10px;opacity:.8;">${RARITIES_BY_ID[b.rarity].name}</div>
       <div style="font-size:10px;">Mejor: ${QUALITIES_BY_ID[slot.bestQuality].name}</div>

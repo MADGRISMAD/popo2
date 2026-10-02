@@ -6,6 +6,7 @@
 import { VIEWPORT, GAME } from './config.js';
 import { state } from './gameState.js';
 import { unlockAudio } from './audioManager.js';
+import { unproject } from './render/projection.js';
 
 const listeners = {
   parkMove: new Set(),
@@ -57,9 +58,11 @@ function refreshRect () {
 function toCanvas (clientX, clientY) {
   if (!canvas) return { x: 0, y: 0 };
   if (!canvasRect) refreshRect();
-  const x = (clientX - canvasRect.left) * (canvas.width  / canvasRect.width);
-  const y = (clientY - canvasRect.top)  * (canvas.height / canvasRect.height);
-  return { x, y };
+  const sx = (clientX - canvasRect.left) * (canvas.width  / canvasRect.width);
+  const sy = (clientY - canvasRect.top)  * (canvas.height / canvasRect.height);
+  // x,y = mundo (lógica del juego) · sx,sy = pantalla del canvas (hit-tests visuales)
+  const w = unproject(sx, sy);
+  return { x: w.x, y: w.y, sx, sy };
 }
 
 function handleMove (e) {

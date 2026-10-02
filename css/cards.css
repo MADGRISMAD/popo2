@@ -1,128 +1,107 @@
 /* ============================================================
-   cards.css — cartas como stickers, sobres como cartas físicas
+   cards.css — cartas coleccionables y sobres, estilo Paper Mario:
+   papel blanco con contorno índigo, ventana de retrato con cielo,
+   franja del color de la rareza y sombra dura desplazada.
    ============================================================ */
 
 .card {
+  --rc: var(--r-comun);
   position: relative;
-  background: var(--c-paper-0);
-  background-image:
-    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.5) 0%, transparent 60%),
-    repeating-linear-gradient(45deg,
-      rgba(75,42,16,0.02) 0px, rgba(75,42,16,0.02) 1px,
-      transparent 1px, transparent 5px);
-  color: var(--c-paper-ink);
-  border: 3px solid var(--c-paper-3);
-  border-radius: 14px;
-  padding: 8px;
+  background: #fff;
+  color: var(--ink);
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  padding: 7px 7px 8px;
   display: flex; flex-direction: column;
   cursor: pointer;
-  transition:
-    transform 0.18s cubic-bezier(.2,.9,.2,1.4),
-    box-shadow 0.15s,
-    filter 0.15s;
+  transition: transform 0.18s cubic-bezier(.2,.9,.2,1.5), box-shadow 0.15s;
   overflow: visible;
-  box-shadow: 0 3px 0 var(--c-paper-3), 0 6px 14px rgba(0,0,0,0.3);
-  transform: rotate(-0.7deg);
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 6px var(--rc), 3px 5px 0 rgba(20,12,48,0.4);
+  transform: rotate(-1deg);
 }
-.card:nth-child(even) { transform: rotate(0.7deg); }
-.card:nth-child(3n)   { transform: rotate(-0.3deg); }
+.card:nth-child(even) { transform: rotate(1deg); }
+.card:nth-child(3n)   { transform: rotate(-0.4deg); }
 .card:hover {
-  transform: translateY(-6px) rotate(-1deg) scale(1.035);
-  box-shadow: 0 6px 0 var(--c-paper-3), 0 16px 30px rgba(0,0,0,0.45);
+  transform: translateY(-6px) rotate(-2deg) scale(1.05);
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 6px var(--rc), 6px 10px 0 rgba(20,12,48,0.4);
   z-index: 5;
-  filter: brightness(1.04);
 }
 
-/* Borde de rareza con foil */
-.card.r-comun   { border-color: var(--r-comun); }
-.card.r-raro    {
-  border-color: var(--r-raro);
-  box-shadow: 0 3px 0 var(--r-raro), 0 0 14px rgba(77,143,255,0.35), 0 6px 14px rgba(0,0,0,0.3);
-}
-.card.r-epico   {
-  border-color: var(--r-epico);
-  box-shadow: 0 3px 0 var(--r-epico), 0 0 18px rgba(166,77,255,0.40), 0 6px 14px rgba(0,0,0,0.3);
-}
-.card.r-legend  {
-  border-color: var(--r-legend);
-  box-shadow: 0 3px 0 var(--r-legend), 0 0 22px rgba(255,183,26,0.55), 0 6px 14px rgba(0,0,0,0.3);
-  background-image:
-    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.6) 0%, transparent 60%),
-    linear-gradient(135deg, rgba(255,200,80,0.18) 0%, transparent 50%, rgba(255,160,40,0.18) 100%),
-    repeating-linear-gradient(45deg,
-      rgba(255,180,40,0.05) 0px, rgba(255,180,40,0.05) 1px,
-      transparent 1px, transparent 5px);
-}
-.card.r-mitico  {
-  border-color: var(--r-mitico);
-  box-shadow: 0 3px 0 var(--r-mitico), 0 0 26px rgba(255,71,87,0.60), 0 6px 14px rgba(0,0,0,0.3);
-  background-image:
-    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.55) 0%, transparent 60%),
-    linear-gradient(135deg, rgba(255,80,90,0.18) 0%, transparent 50%, rgba(255,100,150,0.20) 100%);
-  animation: miticoPulse 2.8s ease-in-out infinite;
-}
+.card.r-comun   { --rc: var(--r-comun); }
+.card.r-raro    { --rc: var(--r-raro); }
+.card.r-epico   { --rc: var(--r-epico); }
+.card.r-legend  { --rc: var(--r-legend); background: linear-gradient(160deg, #fff 55%, #fff1c4); }
+.card.r-mitico  { --rc: var(--r-mitico); background: linear-gradient(160deg, #fff 55%, #ffd6dc); animation: miticoPulse 2.6s ease-in-out infinite; }
 .card.r-cosmico {
-  border-color: var(--r-cosmico);
-  box-shadow: 0 3px 0 var(--r-cosmico), 0 0 32px rgba(236,89,194,0.65), 0 6px 14px rgba(0,0,0,0.3);
-  background-image:
-    radial-gradient(ellipse at 30% 15%, rgba(255,255,255,0.55) 0%, transparent 60%),
-    linear-gradient(135deg, rgba(236,89,194,0.20) 0%, rgba(166,77,255,0.20) 50%, rgba(255,183,26,0.20) 100%);
-  background-size: 200% 200%;
+  --rc: var(--r-cosmico);
+  background: linear-gradient(135deg, #fff 30%, #ffd9f2 55%, #e4d6ff 75%, #fff2c4 100%);
+  background-size: 220% 220%;
   animation: cosmicShimmer 4s ease-in-out infinite;
 }
 
 .card .card-thumb {
   height: 96px;
   border-radius: 10px;
-  background: linear-gradient(160deg, #faecc4, #f4d28b);
-  border: 2px solid var(--c-paper-3);
+  background:
+    linear-gradient(180deg, #8fd6ff 0%, #c9f0ff 62%, #82d457 62%, #74c94c 100%);
+  border: 3px solid var(--ink);
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden;
-  margin-bottom: 8px;
-  box-shadow: inset 0 -2px 0 rgba(75,42,16,0.15);
+  margin: 4px 4px 0;
+  font-size: 34px;
 }
+.card.r-legend  .card-thumb { background: linear-gradient(180deg, #ffd56a 0%, #fff0b8 62%, #82d457 62%, #74c94c 100%); }
+.card.r-mitico  .card-thumb { background: linear-gradient(180deg, #ff8a9a 0%, #ffd2d8 62%, #82d457 62%, #74c94c 100%); }
+.card.r-cosmico .card-thumb { background: linear-gradient(180deg, #4b3aa8 0%, #b06bff 62%, #82d457 62%, #74c94c 100%); }
+.card .card-thumb .dog-portrait { width: 104%; height: 104%; margin-bottom: -6px; }
 .card .card-name {
   font-weight: 900; font-size: 13px; line-height: 1.2;
-  color: var(--c-paper-ink);
+  color: var(--ink);
+  margin: 6px 4px 0;
 }
 .card .card-meta {
-  font-size: 10px; color: var(--c-paper-ink2);
-  margin-top: 2px;
+  font-size: 10px; color: var(--ink-2);
+  margin: 2px 4px 0;
   display: flex; justify-content: space-between;
-  font-weight: 700;
+  font-weight: 900;
 }
 .card .card-stack {
-  position: absolute; top: -6px; right: -6px;
-  background: var(--c-accent-rose);
-  color: white;
-  border: 2px solid white;
-  border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 900;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.25);
-  transform: rotate(8deg);
+  position: absolute; top: -10px; right: -10px;
+  background: var(--red); color: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 12px; font-weight: 900;
+  transform: rotate(10deg);
 }
 .card .card-quality {
-  position: absolute; top: 6px; left: 6px;
-  width: 16px; height: 16px;
+  position: absolute; top: 14px; left: 14px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 0 8px currentColor, 0 1px 2px rgba(0,0,0,0.3);
+  border: 3px solid var(--ink);
+  z-index: 2;
 }
 .card .card-new-tag {
-  position: absolute; top: -8px; left: -6px;
-  background: var(--c-accent-rose);
-  color: white;
-  border: 2px solid white;
-  border-radius: 8px;
-  padding: 2px 8px;
-  font-size: 10px; font-weight: 900;
-  text-transform: uppercase; letter-spacing: 0.5px;
+  position: absolute; top: -12px; left: -8px;
+  background: var(--yellow); color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 1px 8px;
+  font-size: 11px; font-weight: 900;
+  text-transform: uppercase;
   transform: rotate(-12deg);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.25);
   animation: newTagPulse 1.2s ease-in-out infinite alternate;
+  z-index: 3;
 }
+.sex-badge {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2.5px solid var(--ink);
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 900; color: #fff;
+  background: var(--blue);
+}
+.sex-badge.f { background: var(--pink); }
 
 .q-gris    { color: var(--q-gris);    background: var(--q-gris); }
 .q-verde   { color: var(--q-verde);   background: var(--q-verde); }
@@ -132,133 +111,134 @@
 .q-rojo    { color: var(--q-rojo);    background: var(--q-rojo);   animation: pulseGlow 2s infinite; }
 .q-cosmico { color: var(--q-cosmico); background: var(--q-cosmico); animation: cosmicShimmer 2s infinite; }
 
-/* Grid de cartas */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  padding: 6px;
+  gap: 14px;
+  padding: 10px 6px;
 }
 
-/* === Sobres (cartas físicas premium) ========================= */
+/* === Sobres (sobres de papel con solapa y sello) ============= */
 .pack {
+  --p: var(--purple); --pd: var(--purple-d);
   position: relative;
-  border-radius: 16px; padding: 16px;
+  border-radius: 20px; padding: 18px 14px 14px;
   background:
-    linear-gradient(160deg, var(--c-accent-violet), #4a1d8c);
-  border: 3px solid #2a0d57;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
+    linear-gradient(160deg, transparent 0 46%, rgba(0,0,0,0.08) 46% 100%),
+    var(--p);
+  border: 4px solid var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
   cursor: pointer; min-height: 200px;
-  transition: transform 0.18s cubic-bezier(.2,.9,.2,1.4);
-  box-shadow:
-    0 4px 0 #2a0d57,
-    0 14px 28px rgba(0,0,0,0.55),
-    inset 0 2px 0 rgba(255,255,255,0.18);
+  transition: transform 0.18s cubic-bezier(.2,.9,.2,1.5);
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.45), 5px 7px 0 rgba(20,12,48,0.45);
   overflow: hidden;
-  color: white;
+  color: #fff;
   transform: rotate(-1.5deg);
 }
-.pack:hover {
-  transform: translateY(-4px) rotate(-2deg) scale(1.02);
-  box-shadow: 0 8px 0 #2a0d57, 0 22px 40px rgba(0,0,0,0.7), inset 0 2px 0 rgba(255,255,255,0.18);
-}
-/* Solapa superior del sobre */
+.pack:nth-child(even) { transform: rotate(1.5deg); }
+.pack:hover { transform: translateY(-5px) rotate(-3deg) scale(1.03); }
+/* Solapa */
 .pack::before {
   content: '';
-  position: absolute; top: -2px; left: -2px; right: -2px;
-  height: 24px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.18), transparent);
-  border-bottom: 2px solid rgba(0,0,0,0.25);
+  position: absolute; top: -4px; left: -4px; right: -4px;
+  height: 46px;
+  background: var(--pd);
+  clip-path: polygon(0 0, 100% 0, 100% 40%, 50% 100%, 0 40%);
+  border-bottom: 4px solid var(--ink);
   z-index: 0;
 }
-/* Sello de cera */
+/* Sello */
 .pack::after {
-  content: '';
-  position: absolute; top: 12px; right: 12px;
-  width: 22px; height: 22px;
-  background: radial-gradient(circle at 35% 35%, #ff7a6c, #c43d36);
+  content: '★';
+  position: absolute; top: 18px; left: 50%;
+  transform: translateX(-50%);
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  font-size: 15px; color: #fff;
+  background: var(--red);
   border-radius: 50%;
-  border: 2px solid #7a1a14;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  border: 3px solid var(--ink);
   z-index: 2;
 }
 .pack > * { position: relative; z-index: 1; }
-
 .pack .pack-icon {
-  font-size: 64px;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.55));
-  margin-top: 6px;
+  font-size: 58px;
+  margin-top: 22px;
+  filter: drop-shadow(3px 4px 0 rgba(20,12,48,0.45));
 }
 .pack .pack-name {
-  font-weight: 900;
-  text-align: center;
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  text-shadow: 0 2px 0 rgba(0,0,0,0.4);
+  font-weight: 900; text-align: center; font-size: 17px;
+  text-shadow: var(--text-outline);
 }
 .pack .pack-desc {
-  font-size: 11px;
-  color: rgba(255,255,255,0.85);
+  font-size: 11px; font-weight: 800;
+  color: var(--ink);
+  background: rgba(255,255,255,0.92);
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 4px 8px;
   text-align: center;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
-.pack .pack-price { font-size: 14px; font-weight: 900; }
+.pack .pack-price {
+  font-size: 15px; font-weight: 900;
+  background: #fff; color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 999px;
+  padding: 2px 12px;
+}
 .pack .pack-actions { display: flex; gap: 6px; width: 100%; margin-top: auto; }
 .pack .pack-actions .btn { flex: 1; }
 
-.pack.gold {
-  background: linear-gradient(160deg, #f59e0b, #7a3a04);
-  border-color: #4a2200;
-  box-shadow:
-    0 4px 0 #4a2200,
-    0 0 24px rgba(244,196,48,0.45),
-    0 14px 28px rgba(0,0,0,0.55);
-}
-.pack.gold::after { background: radial-gradient(circle at 35% 35%, #ffd56a, #d97706); border-color: #4a2200; }
-.pack.gold .pack-icon { filter: drop-shadow(0 0 14px rgba(244,196,48,0.7)); }
+.pack.gold      { --p: var(--orange); --pd: var(--orange-d); }
+.pack.legendary { --p: var(--red);    --pd: var(--red-d); animation: legendPulse 2.4s infinite; }
+.pack.legendary::after { background: var(--yellow); color: var(--ink); }
 
-.pack.legendary {
-  background: linear-gradient(160deg, #ff4757, #5a0a0a);
-  border-color: #3a0606;
-  animation: legendPulse 2.4s infinite;
-  box-shadow:
-    0 4px 0 #3a0606,
-    0 0 28px rgba(255,71,87,0.55),
-    0 14px 28px rgba(0,0,0,0.55);
-}
-
-/* Animación apertura sobre */
+/* Animación apertura (legacy) */
 .pack-opening {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.85);
+  background: rgba(15,10,35,0.85);
   z-index: 1000; pointer-events: auto;
 }
-.pack-reveal-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 140px);
-  grid-auto-rows: 200px;
-  gap: 14px;
-  max-width: 80%;
-}
-.pack-reveal-card {
-  opacity: 0;
-  transform: scale(0.5) rotateY(180deg);
-  animation: revealCard 0.6s cubic-bezier(.2,.9,.2,1.4) forwards;
-}
+.pack-reveal-grid { display: grid; grid-template-columns: repeat(5, 140px); grid-auto-rows: 200px; gap: 14px; max-width: 80%; }
+.pack-reveal-card { opacity: 0; transform: scale(0.5) rotateY(180deg); animation: revealCard 0.6s cubic-bezier(.2,.9,.2,1.4) forwards; }
 
 /* Item simple */
 .item {
-  background: var(--c-paper-1);
-  border: 2px solid var(--c-paper-3);
-  border-radius: 10px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
   padding: 6px 10px;
   display: flex; align-items: center; gap: 8px;
   font-size: 11px;
-  color: var(--c-paper-ink);
-  font-weight: 700;
-  box-shadow: 0 2px 0 var(--c-paper-3);
+  color: var(--ink);
+  font-weight: 900;
+  box-shadow: 0 3px 0 var(--ink);
 }
 .item .ico { font-size: 18px; }
 .item .qty { margin-left: auto; font-weight: 900; }
+
+/* === Lista de sobres en el panel (formato horizontal) ======== */
+.pack-list { display: flex; flex-direction: column; gap: 16px; padding: 8px 6px 10px; }
+.pack-list .pack {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  column-gap: 12px; row-gap: 6px;
+  align-items: center;
+  min-height: 0;
+  padding: 14px 12px 12px 10px;
+}
+.pack-list .pack::before { width: 104px; right: auto; height: 100%; clip-path: polygon(0 0, 100% 0, 78% 50%, 100% 100%, 0 100%); border-bottom: none; border-right: 0; }
+.pack-list .pack::after { top: 6px; left: 6px; transform: none; width: 26px; height: 26px; font-size: 13px; }
+.pack-list .pack-icon { grid-row: 1 / span 4; margin: 0; font-size: 50px; text-align: center; position: relative; }
+.pack-count {
+  position: absolute; bottom: -6px; right: 0;
+  background: var(--red); color: #fff;
+  border: 3px solid var(--ink); border-radius: 999px;
+  font-size: 13px; font-weight: 900; padding: 0 8px; line-height: 20px;
+  filter: none;
+}
+.pack-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pack-list .pack-price { white-space: nowrap; font-size: 13px; }
+.pack-list .pack-name { text-align: left; font-size: 16px; }
+.pack-list .pack-desc { text-align: left; font-size: 10.5px; padding: 3px 8px; }
+.pack-list .pack-actions { margin: 0; }

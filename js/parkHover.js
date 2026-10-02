@@ -12,6 +12,8 @@ import { TRAITS_BY_ID } from './data/traits.js';
 import { FOODS_BY_ID, FOOD_EFFECT_DESC } from './data/foods.js';
 import { xpToNext } from './systems/dogSystem.js';
 import { dogValue } from './systems/sellSystem.js';
+import { findDogAtScreen } from './systems/pettingSystem.js';
+import { project } from './render/projection.js';
 
 let _hoverDogId = null;
 let _hoverBowlId = null;
@@ -29,7 +31,7 @@ export function initParkHover () {
     if (_candidateId !== null && _hoverDogId !== _candidateId && _lastEvt
         && performance.now() - _candidateSince >= DWELL_MS) {
       const d = state.dogs.map[_candidateId];
-      if (d && Math.hypot(d.x - _lastEvt.x, d.y - _lastEvt.y) < 34) {
+      if (d && findDogAtScreen(_lastEvt.sx, _lastEvt.sy) === d) {
         _hoverDogId = d.id;
         _hideAt = 0;
         tooltip.show(buildDogTooltip(d), _lastEvt.cx, _lastEvt.cy);
@@ -61,8 +63,8 @@ function handleMove (p, e) {
   }
 
   // 1) Perros
-  const dog = findDogAt(p.x, p.y);
-  _lastEvt = { x: p.x, y: p.y, cx: e.clientX, cy: e.clientY };
+  const dog = findDogAtScreen(p.sx, p.sy);
+  _lastEvt = { x: p.x, y: p.y, sx: p.sx, sy: p.sy, cx: e.clientX, cy: e.clientY };
   if (dog) {
     if (_candidateId !== dog.id) {
       _candidateId = dog.id;

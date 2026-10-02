@@ -11,24 +11,36 @@ import { logEvent } from '../eventLog.js';
 // Decoración determinista por seed simple (no se guarda, solo visual)
 let _decorations = null;
 
+// Camino ondulado que cruza el parque (en coords de mundo)
+export function pathY (x) {
+  return 390 + Math.sin(x / 170) * 55;
+}
+
 export function getDecorations () {
   if (_decorations) return _decorations;
   const seed = 1337;
   let s = seed;
   const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  // Zonas libres: platos, zona de crianza y el camino
+  const keepClear = [[PARK.W * 0.30, PARK.H * 0.55], [PARK.W * 0.70, PARK.H * 0.45], [540, 360]];
+  const free = (x, y, pad) => Math.abs(y - pathY(x)) > 60 + pad &&
+    keepClear.every(([cx, cy]) => Math.hypot(cx - x, cy - y) > 110 + pad);
   const trees = [];
-  for (let i = 0; i < 12; i++) {
-    trees.push({ x: rand() * (PARK.W - 60) + 30, y: rand() * (PARK.H - 60) + 30, r: 18 + rand() * 10 });
+  let guard = 0;
+  while (trees.length < 9 && guard++ < 400) {
+    const x = rand() * (PARK.W - 80) + 40;
+    const y = rand() * (PARK.H - 90) + 30;
+    if (!free(x, y, 0)) continue;
+    if (trees.some(t => Math.hypot(t.x - x, t.y - y) < 150)) continue;
+    trees.push({ x, y, r: 22 + rand() * 10, kind: rand() < 0.35 ? 'bush' : 'tree', fruit: rand() < 0.4 });
   }
   const flowers = [];
-  for (let i = 0; i < 40; i++) {
-    flowers.push({ x: rand() * PARK.W, y: rand() * PARK.H, color: ['#ec4899', '#f59e0b', '#a855f7', '#fbbf24'][Math.floor(rand() * 4)] });
+  for (let i = 0; i < 70; i++) {
+    const x = rand() * PARK.W, y = rand() * PARK.H;
+    if (Math.abs(y - pathY(x)) < 40) continue;
+    flowers.push({ x, y, color: ['#ff5a8a', '#ffc93c', '#b06bff', '#ffffff', '#ff8a3d'][Math.floor(rand() * 5)] });
   }
-  const paths = [
-    { x1: 0, y1: 360, x2: PARK.W, y2: 380 },
-    { x1: 540, y1: 0, x2: 560, y2: PARK.H },
-  ];
-  _decorations = { trees, flowers, paths };
+  _decorations = { trees, flowers };
   return _decorations;
 }
 

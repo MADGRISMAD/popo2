@@ -166,7 +166,7 @@ function draw (canvas) {
   const W = canvas.width, cx = W / 2, cy = W / 2, R = W / 2 - 14;
   c.clearRect(0, 0, W, W);
   // Borde exterior con bombillas
-  c.fillStyle = '#4b2a10';
+  c.fillStyle = '#2d2748';
   c.beginPath(); c.arc(cx, cy, R + 12, 0, Math.PI * 2); c.fill();
   const t = performance.now() / 1000;
   for (let i = 0; i < 24; i++) {
@@ -180,7 +180,7 @@ function draw (canvas) {
     const a1 = a0 + SEG;
     c.fillStyle = SEGMENTS[i].color;
     c.beginPath(); c.moveTo(cx, cy); c.arc(cx, cy, R, a0, a1); c.closePath(); c.fill();
-    c.strokeStyle = '#fff6dd'; c.lineWidth = 3; c.stroke();
+    c.strokeStyle = '#ffffff'; c.lineWidth = 3; c.stroke();
     // Etiqueta
     c.save();
     c.translate(cx, cy);
@@ -194,7 +194,7 @@ function draw (canvas) {
     c.restore();
   }
   // Centro
-  c.fillStyle = '#fff6dd';
+  c.fillStyle = '#ffffff';
   c.beginPath(); c.arc(cx, cy, 34, 0, Math.PI * 2); c.fill();
   c.fillStyle = '#ec5985';
   c.beginPath(); c.arc(cx, cy, 26, 0, Math.PI * 2); c.fill();

@@ -53,8 +53,10 @@ export const modal = {
 };
 
 export const toast = {
-  show ({ icon = '✨', title = '', desc = '', kind = '', durationMs = 4500 } = {}) {
+  show ({ icon = '✨', title = '', desc = '', kind = '', durationMs = 3600 } = {}) {
     ensure();
+    // Máximo 3 avisos a la vez: el más viejo se va
+    while (_toastRoot.children.length >= 3) _toastRoot.firstElementChild.remove();
     const t = document.createElement('div');
     t.className = 'toast' + (kind ? ' ' + kind : '');
     t.innerHTML = `
@@ -67,7 +69,7 @@ export const toast = {
     setTimeout(() => {
       t.style.transition = 'all 0.4s ease';
       t.style.opacity = '0';
-      t.style.transform = 'translateX(60px)';
+      t.style.transform = 'translateY(-30px) scale(0.8)';
       setTimeout(() => t.remove(), 400);
     }, durationMs);
   },

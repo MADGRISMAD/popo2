@@ -5,6 +5,7 @@
 // ============================================================
 
 import { state } from '../gameState.js';
+import { toOverlayPct } from './projection.js';
 
 // ---------- Formato de números: 1.2K · 3.4M · 5.6B ----------
 const SUFFIXES = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi'];
@@ -82,8 +83,9 @@ export function floatText (cx, cy, text, cls = '') {
   if (!overlay || !canvas) return;
   const el = document.createElement('div');
   el.className = 'float-label ' + cls;
-  el.style.left = (cx / canvas.width) * 100 + '%';
-  el.style.top = (cy / canvas.height) * 100 + '%';
+  const pos = toOverlayPct(cx, cy, 30);
+  el.style.left = pos.left + '%';
+  el.style.top = pos.top + '%';
   el.textContent = text;
   overlay.appendChild(el);
   setTimeout(() => el.remove(), 1500);

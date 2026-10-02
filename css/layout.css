@@ -1,14 +1,13 @@
 /* ============================================================
-   layout.css — viewport escalable 16:9, columnas, pantallas
-   Estilo: tira de papel arriba, álbum a los lados, mesa abajo
+   layout.css — viewport 16:9 escalable dentro de un teatro de
+   papel: muro índigo con estrellas, telón rojo enmarcando el
+   parque (el escenario) y tablas de madera abajo.
    ============================================================ */
 
 #viewport-wrap {
   position: fixed; inset: 0;
   display: grid; place-items: center;
-  background:
-    radial-gradient(ellipse at 50% 40%, #4f3220 0%, #110a04 70%),
-    #110a04;
+  background: var(--wall-2);
 }
 
 /* Resolución lógica 1920x1080 (16:9). Se escala vía JS. */
@@ -16,17 +15,20 @@
   position: relative;
   width: 1920px; height: 1080px;
   transform-origin: top left;
-  background:
-    radial-gradient(ellipse at 50% 35%, #5b3a22 0%, #2a1a10 60%, #1a0e06 100%);
   overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, #fff8 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 9%,  #fff6 0 2px, transparent 3px),
+    radial-gradient(circle at 46% 4%,  #fff5 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 92% 30%, #fff5 0 2px, transparent 3px),
+    radial-gradient(circle at 5% 70%,  #fff4 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 97% 82%, #fff4 0 2px, transparent 3px),
+    radial-gradient(ellipse at 50% 30%, #3a3170 0%, var(--wall) 45%, var(--wall-2) 100%);
 }
-
-/* Vignette / borde de mesa */
 #viewport::before {
   content: '';
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+  background: radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(10,6,30,0.55) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -40,36 +42,26 @@
 .screen.active { display: flex; }
 
 /* === Pantalla de carga === */
-#screen-loading {
-  align-items: center; justify-content: center;
-}
+#screen-loading { align-items: center; justify-content: center; }
 .loading-inner { text-align: center; }
 .loader-bar {
-  width: 360px; height: 12px; margin: 24px auto 12px;
-  background: rgba(75,42,16,0.30);
-  border: 2px solid var(--c-paper-3);
-  border-radius: 8px; overflow: hidden;
+  width: 420px; height: 26px; margin: 28px auto 14px;
+  background: var(--paper);
+  border: 4px solid var(--ink);
+  border-radius: 999px; overflow: hidden;
+  box-shadow: var(--drop);
 }
 .loader-fill {
   height: 100%; width: 0%;
-  background: linear-gradient(90deg, var(--c-accent-amber), var(--c-accent-rose));
+  background: repeating-linear-gradient(-45deg, var(--yellow) 0 14px, #ffe27a 14px 28px);
+  border-right: 4px solid var(--ink);
   transition: width 0.3s ease;
 }
-.loader-text { font-size: 14px; color: var(--c-paper-2); letter-spacing: 1px; }
+.loader-text { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: 1px; text-shadow: var(--text-outline); }
 
 /* === Menú principal === */
-#screen-menu {
-  align-items: center; justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-.menu-bg {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 90%, rgba(244,196,48,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 50% 30%, rgba(236,89,133,0.10) 0%, transparent 70%);
-  pointer-events: none;
-}
+#screen-menu { align-items: center; justify-content: center; overflow: hidden; }
+.menu-bg { display: none; }
 #menu-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -78,113 +70,140 @@
 .menu-inner {
   position: relative; z-index: 1;
   text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 18px;
-  padding: 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding: 40px 60px 34px;
+  background: var(--paper);
+  border: 5px solid var(--ink);
+  border-radius: 34px;
+  box-shadow: 10px 12px 0 rgba(20,12,48,0.45), inset 0 0 0 5px #fff, inset 0 0 0 8px var(--paper-3);
+  transform: rotate(-1deg);
+  margin-top: -60px;
 }
 .menu-buttons {
-  display: flex; flex-direction: column; gap: 14px;
-  margin-top: 24px; min-width: 320px;
+  display: flex; flex-direction: column; gap: 12px;
+  margin-top: 14px; min-width: 340px;
 }
-.menu-version { margin-top: 24px; font-size: 12px; color: var(--c-paper-2); opacity: 0.75; }
+.menu-version { margin-top: 10px; font-size: 12px; color: var(--ink-2); font-weight: 800; }
 
 /* === Pantalla de juego === */
 #screen-game { display: none; flex-direction: column; }
 #screen-game.active { display: flex; }
 
-/* Topbar = tira de papel pegada arriba */
+/* Topbar: tira de chips sobre el muro */
 #topbar {
   flex: 0 0 auto;
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 18px;
-  background-color: var(--c-paper-0);
-  background-image:
-    repeating-linear-gradient(45deg,
-      rgba(75,42,16,0.02) 0px, rgba(75,42,16,0.02) 1px,
-      transparent 1px, transparent 5px);
-  color: var(--c-fg-dark);
-  border-bottom: 3px solid var(--c-paper-3);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  flex-wrap: nowrap; min-height: 64px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 22px 6px;
+  color: #fff;
+  flex-wrap: nowrap; min-height: 74px;
   z-index: 10;
 }
 #topbar .title {
-  font-size: 26px; font-weight: 900;
-  background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #ec5985 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  font-size: 34px; font-weight: 900;
+  color: var(--yellow);
   letter-spacing: -0.5px;
-  margin-right: 12px;
-  text-shadow: none;
-  transform: rotate(-1.5deg);
+  margin-right: 10px;
+  text-shadow: var(--text-outline);
+  transform: rotate(-3deg);
+  white-space: nowrap;
 }
-.actions { margin-left: auto; display: flex; gap: 6px; }
+.actions { margin-left: auto; display: flex; gap: 8px; }
 
 #game-body {
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 340px 1fr 380px;
-  gap: 14px; padding: 14px;
+  grid-template-columns: 350px 1fr 390px;
+  gap: 18px; padding: 10px 22px 12px;
   min-height: 0;
 }
 
-/* Paneles laterales como cartas/álbum pegado */
+/* Paneles laterales: hojas de papel con contorno grueso */
 #panel-left, #panel-right {
   display: flex; flex-direction: column;
-  border-radius: 18px; padding: 14px; gap: 8px;
+  border-radius: 24px; padding: 16px; gap: 10px;
   min-height: 0;
-  background-color: var(--c-paper-0);
-  background-image:
-    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.45) 0%, transparent 60%),
-    repeating-linear-gradient(45deg,
-      rgba(75,42,16,0.02) 0px, rgba(75,42,16,0.02) 1px,
-      transparent 1px, transparent 5px);
-  color: var(--c-fg-dark);
-  border: 3px solid var(--c-paper-3);
-  box-shadow: var(--paper-shadow-lift);
+  background: var(--paper);
+  color: var(--ink);
+  border: 5px solid var(--ink);
+  box-shadow: var(--drop-lg), inset 0 0 0 4px #fff, inset 0 0 0 7px var(--paper-3);
 }
-#panel-left  { transform: rotate(-0.5deg); }
-#panel-right { transform: rotate( 0.5deg); }
+#panel-left  { transform: rotate(-0.6deg); }
+#panel-right { transform: rotate( 0.6deg); }
 
+/* Encabezado de panel = cinta de color */
 .panel-header {
-  font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
-  color: var(--c-paper-ink2);
-  padding: 6px 4px 2px;
-  border-bottom: 2px dashed var(--c-paper-3);
-  margin-bottom: 4px;
+  align-self: flex-start;
+  font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
+  color: #fff;
+  background: var(--red);
+  padding: 5px 18px 6px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--paper-shadow-down);
+  text-shadow: 0 2px 0 var(--red-d);
+  margin: 4px 0 2px -6px;
+  transform: rotate(-2deg);
 }
+.panel-header:nth-child(3) { background: var(--blue); text-shadow: 0 2px 0 var(--blue-d); transform: rotate(1.5deg); }
+.panel-header:nth-child(5) { background: var(--green); text-shadow: 0 2px 0 var(--green-d); transform: rotate(-1deg); }
 
+/* === Escenario (parque) con telón === */
 #park-area {
   position: relative;
-  border-radius: 18px; overflow: hidden;
-  border: 4px solid var(--c-paper-3);
-  background: var(--c-grass-1);
+  border-radius: 18px 18px 8px 8px;
+  overflow: hidden;
+  border: 5px solid var(--ink);
+  background: #82d457;
   min-height: 0;
-  box-shadow:
-    inset 0 0 60px rgba(0,0,0,0.25),
-    0 8px 26px rgba(0,0,0,0.5);
+  box-shadow: var(--drop-lg);
+}
+/* Bambalina superior festoneada */
+#park-area::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 0; height: 46px;
+  z-index: 58; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 0, var(--curtain) 0 34px, var(--ink) 34px 38px, transparent 38px) 0 0 / 76px 46px repeat-x,
+    linear-gradient(var(--curtain-d), var(--curtain-d)) 0 0 / 100% 8px no-repeat;
+  filter: drop-shadow(0 4px 0 rgba(20,12,48,0.35));
+}
+/* Telones laterales recogidos */
+#park-area::after {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 57; pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, var(--curtain) 0 9px, var(--curtain-d) 9px 12px, var(--curtain) 12px 18px) left top / 38px 78% no-repeat,
+    repeating-linear-gradient(90deg, var(--curtain) 0 9px, var(--curtain-d) 9px 12px, var(--curtain) 12px 18px) right top / 38px 78% no-repeat;
+  -webkit-mask:
+    radial-gradient(ellipse 60px 100% at 0 0, #000 98%, transparent 100%) left top / 38px 78% no-repeat,
+    radial-gradient(ellipse 60px 100% at 100% 0, #000 98%, transparent 100%) right top / 38px 78% no-repeat;
+          mask:
+    radial-gradient(ellipse 60px 100% at 0 0, #000 98%, transparent 100%) left top / 38px 78% no-repeat,
+    radial-gradient(ellipse 60px 100% at 100% 0, #000 98%, transparent 100%) right top / 38px 78% no-repeat;
 }
 #park-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   display: block;
+  cursor: crosshair;
 }
-#park-overlay {
-  position: absolute; inset: 0;
-  pointer-events: none;
-}
+#park-overlay { position: absolute; inset: 0; pointer-events: none; }
 #particles-canvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   pointer-events: none;
 }
 
+/* Tablas del escenario (registro de eventos) */
 #game-footer {
-  flex: 0 0 90px;
-  margin: 0 14px 14px; padding: 10px 14px;
+  flex: 0 0 84px;
+  margin: 0 22px 16px; padding: 10px 16px;
   border-radius: 14px;
   display: flex; gap: 8px;
 }
 .event-log {
-  flex: 1; display: flex; flex-direction: column-reverse; gap: 4px;
+  flex: 1; display: flex; flex-direction: column-reverse; gap: 5px;
   font-size: 12px; overflow: hidden;
 }
 
@@ -196,59 +215,42 @@
 }
 #modal-root.active, #pause-overlay:not(.hidden) {
   pointer-events: auto;
-  background: rgba(20, 10, 4, 0.65);
-  backdrop-filter: blur(4px);
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(42,35,80,0.55), rgba(15,10,35,0.85));
+  backdrop-filter: blur(3px);
 }
 
-#pause-overlay {
-  display: flex; align-items: center; justify-content: center;
-  z-index: 200;
-}
+#pause-overlay { display: flex; align-items: center; justify-content: center; z-index: 200; }
 .pause-card {
-  background: var(--c-paper-0);
-  background-image:
-    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.45) 0%, transparent 60%),
-    repeating-linear-gradient(45deg,
-      rgba(75,42,16,0.02) 0px, rgba(75,42,16,0.02) 1px,
-      transparent 1px, transparent 5px);
-  color: var(--c-fg-dark);
-  border: 3px solid var(--c-paper-3);
-  border-radius: 22px; padding: 32px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 5px solid var(--ink);
+  border-radius: 28px; padding: 34px 38px;
   display: flex; flex-direction: column; gap: 14px;
-  min-width: 320px;
-  box-shadow: var(--paper-shadow-lift);
-  transform: rotate(-1deg);
+  min-width: 340px;
+  box-shadow: 10px 12px 0 rgba(20,12,48,0.5), inset 0 0 0 5px #fff, inset 0 0 0 8px var(--paper-3);
+  transform: rotate(-1.5deg);
 }
-.pause-card h2 { text-align: center; margin-bottom: 8px; color: var(--c-paper-ink); font-size: 28px; }
+.pause-card h2 { text-align: center; margin-bottom: 8px; color: var(--yellow); font-size: 40px; text-shadow: var(--text-outline); }
 
-/* Combo flotante grande sobre el parque */
+/* Combo flotante grande (oculto: ahora va en el cursor) */
 #combo-float {
-  position: absolute;
-  pointer-events: none;
-  font-weight: 900;
-  font-size: 64px;
-  letter-spacing: -2px;
-  color: white;
-  text-shadow:
-    -3px -3px 0 var(--c-paper-ink),
-     3px -3px 0 var(--c-paper-ink),
-    -3px  3px 0 var(--c-paper-ink),
-     3px  3px 0 var(--c-paper-ink),
-     0   6px 0 rgba(0,0,0,0.35);
+  position: absolute; pointer-events: none;
+  font-weight: 900; font-size: 64px; color: white;
+  text-shadow: var(--text-outline);
   z-index: 60;
-  transform-origin: center;
   transition: transform 0.18s cubic-bezier(.2,.9,.2,1.4);
 }
 #combo-float.hidden { opacity: 0; transform: scale(0.4); }
 
-/* Banner Fiebre del Parque (overlay parque) */
+/* Fiebre del parque */
 #fever-overlay {
   position: absolute; inset: 0;
   pointer-events: none;
   z-index: 55;
   background:
-    radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(244,196,48,0.18) 70%, rgba(236,89,133,0.30) 100%);
+    radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(255,207,46,0.22) 72%, rgba(255,111,168,0.38) 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
-#fever-overlay.active { opacity: 1; animation: feverPulse 2.4s ease-in-out infinite; }
+#fever-overlay.active { opacity: 1; animation: feverPulse 1.6s ease-in-out infinite; }
