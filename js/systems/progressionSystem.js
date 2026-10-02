@@ -7,7 +7,7 @@ import { state } from '../gameState.js';
 import { createDog, activateDog } from './dogSystem.js';
 import { init as missionInit } from './missionSystem.js';
 import { init as bowlInit } from './foodBowlSystem.js';
-import { init as poopInit } from './poopSystem.js';
+import { init as poopInit, normalizeLoaded } from './poopSystem.js';
 
 export function startNewPark () {
   // Crea 2 callejeros adultos para empezar
@@ -21,6 +21,7 @@ export function startNewPark () {
 }
 
 export function ensureSystemsReady () {
+  normalizeLoaded();
   bowlInit();
   missionInit();
   poopInit();

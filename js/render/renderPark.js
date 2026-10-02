@@ -10,6 +10,7 @@ import { PARK } from '../config.js';
 import { getDecorations } from '../systems/parkSystem.js';
 import { renderDogs } from './renderDogs.js';
 import { renderPoops } from './renderPoop.js';
+import { renderMysteryBox } from './renderHooks.js';
 import { grassTexture, pathTexture } from './paperTexture.js';
 
 let ctx = null;
@@ -71,6 +72,9 @@ export function render (dt) {
 
   // ====== CAPA 9: perros (orden por Y) ============================
   renderDogs(ctx, dt);
+
+  // ====== CAPA 10: caja misteriosa (encima de todo) ===============
+  renderMysteryBox(ctx);
 }
 
 // ---------------- helpers ----------------------------------------

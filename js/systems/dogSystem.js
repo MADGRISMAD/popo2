@@ -3,6 +3,7 @@
 // edad, hambre, felicidad, peleas, descanso, embarazo, niveles.
 // ============================================================
 
+import { UPGRADES_BY_ID } from '../data/upgrades.js';
 import { state } from '../gameState.js';
 import { DOG, PARK } from '../config.js';
 import { BREEDS, BREEDS_BY_ID, RARITIES, RARITIES_BY_ID, QUALITIES, QUALITIES_BY_ID } from '../data/dogs.js';
@@ -190,8 +191,10 @@ function updateDog (dog, dt) {
 
   // Hambre / felicidad
   const comeFactor = 0.6 + (dog.stats?.come ?? 5) / 20;        // 0.7 a 1.1
-  const hungerMult = traitMult(dog, 'estomago', 0.75) * traitMult(dog, 'gloton', 1.5) * comeFactor;
-  const happMult   = traitMult(dog, 'felizpornat', 0.6) * (mods.happyDecay || 1);
+  const hungerMult = traitMult(dog, 'estomago', 0.75) * traitMult(dog, 'gloton', 1.5) * comeFactor
+                   * UPGRADES_BY_ID.hunger.effect(state.inventory.upgrades.hunger || 0);
+  const happMult   = traitMult(dog, 'felizpornat', 0.6) * (mods.happyDecay || 1)
+                   * UPGRADES_BY_ID.happy.effect(state.inventory.upgrades.happy || 0);
   dog.hunger     = Math.max(0, dog.hunger - DOG.HUNGER_DECAY_PER_SEC * hungerMult * dt);
   dog.happiness  = Math.max(0, dog.happiness - DOG.HAPPINESS_DECAY_PER_SEC * happMult * dt);
 
@@ -315,8 +318,9 @@ function poopInterval (dog) {
   const traitMultProd = traitMult(dog, 'productor', 1.25) * traitMult(dog, 'perezoso', 0.7);
   const levelMult = 1 + (dog.level - 1) * DOG.LEVEL_PROD_BONUS;
   const foodBoost = (performance.now() < (dog._foodProdBoostUntil || 0)) ? 1.25 : 1;
-  const denom = baseRate * ageMult * happyMult * hungerMult * traitMultProd * levelMult * foodBoost || 0.001;
-  return Math.max(2, (DOG.POOP_INTERVAL_BASE + Math.random() * DOG.POOP_INTERVAL_VAR) / denom);
+  const upgProd = UPGRADES_BY_ID.production.effect(state.inventory.upgrades.production || 0);
+  const denom = baseRate * ageMult * happyMult * hungerMult * traitMultProd * levelMult * foodBoost * upgProd || 0.001;
+  return Math.max(0.8, (DOG.POOP_INTERVAL_BASE + Math.random() * DOG.POOP_INTERVAL_VAR) / denom);
 }
 
 function maybePickFight (dog, mods) {

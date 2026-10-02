@@ -4,6 +4,8 @@
 // Compatibilidad: Baja / Media / Alta / Excelente.
 // ============================================================
 
+import { gainXP } from './hookSystem.js';
+import { HOOKS } from '../config.js';
 import { state } from '../gameState.js';
 import { BREEDING, DOG } from '../config.js';
 import { QUALITIES, QUALITY_INDEX, RARITIES, BREEDS_BY_ID } from '../data/dogs.js';
@@ -151,6 +153,7 @@ function handleBirth (mother) {
   mother.pregnantBy = null;
 
   state.stats.totalDogsBorn++;
+  gainXP(HOOKS.XP_PER_BIRTH);
   sfx.birth();
   sfx.confetti();
   confetti(baby.x, baby.y, 50);

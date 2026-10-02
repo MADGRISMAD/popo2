@@ -31,6 +31,9 @@ import * as automationSystem from './systems/automationSystem.js';
 import * as visitorSystem    from './systems/visitorSystem.js';
 import * as comboHidden      from './systems/comboHiddenSystem.js';
 import * as pettingSystem    from './systems/pettingSystem.js';
+import * as hookSystem       from './systems/hookSystem.js';
+import * as juice            from './render/juice.js';
+import { openWheel }         from './render/renderWheel.js';
 import { ensureSystemsReady, startNewPark } from './systems/progressionSystem.js';
 
 import { initParkRender, render as renderPark } from './render/renderPark.js';
@@ -81,11 +84,15 @@ async function boot () {
   registerUpdater(dt => automationSystem.update(dt));
   registerUpdater(dt => visitorSystem.update(dt));
   registerUpdater(dt => comboHidden.update(dt));
+  registerUpdater(dt => hookSystem.update(dt));
 
   registerRenderer(dt => renderPark(dt));
   registerRenderer(dt => { updateParticles(dt); renderParticles(); });
   registerRenderer(dt => renderHUD(dt));
+  registerRenderer(dt => juice.update(dt));
   registerRenderer(dt => uiTick(dt));
+
+  document.getElementById('btn-wheel').onclick = () => openWheel();
 
   startLoop();
   startAutoSave();
@@ -131,6 +138,7 @@ function startNewGame () {
   stopMenuRender();
   logEvent('¡Bienvenido a tu nuevo parque!', 'gold');
   save();
+  setTimeout(() => hookSystem.checkDaily(), 600);
   // Forzar render inicial inmediato
   setTimeout(() => { renderShop(); renderInventory(); }, 16);
 }
@@ -138,8 +146,8 @@ function startNewGame () {
 function continueGame () {
   if (!load()) { startNewGame(); return; }
   ensureSystemsReady();
-  // Catch-up offline
-  economySystem.offlineCatchUp(state.meta.lastSaved);
+  // Catch-up offline (con popup y luego la recompensa diaria)
+  const offline = economySystem.offlineCatchUp(state.meta.lastSaved);
   state.meta.paused = false;
   state.meta.started = true;
   showScreen('screen-game');
@@ -149,6 +157,9 @@ function continueGame () {
   document.documentElement.style.setProperty('--ui-scale', state.options.uiScale);
   logEvent('Partida cargada', 'gold');
   setTimeout(() => { renderShop(); renderInventory(); }, 16);
+  setTimeout(() => {
+    hookSystem.showOfflineEarnings(offline?.amount, offline?.seconds, () => hookSystem.checkDaily());
+  }, 500);
 }
 
 // Guardar al cerrar

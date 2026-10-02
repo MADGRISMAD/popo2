@@ -87,7 +87,8 @@ export const state = {
     activeMission: null,   // missionId
     missionProgress: 0,
     completedMissions: [],
-    miniGoal: null,        // { type, target, progress }
+    miniGoal: null,        // { type, target, progress, base }
+    miniGoalsDone: 0,
     achievements: {},      // id -> true
     eventActive: null,     // { id, until }
     prestigeLevel: 0,
@@ -107,8 +108,27 @@ export const state = {
     maxCombo: 1,
   },
 
+  // Nivel del cuidador (jugador): sube con todo lo que haces
+  player: {
+    level: 1,
+    xp: 0,
+  },
+
+  // Ganchos: ruleta, racha diaria, récords
+  hooks: {
+    spins: 1,              // giros de ruleta disponibles
+    spinClock: 0,          // segundos jugados acumulados hacia el giro gratis
+    dailyDay: null,        // 'YYYY-MM-DD' del último reclamo
+    dailyStreak: 0,
+    boxesOpened: 0,
+    bestCombo: 1,
+  },
+
   log: [],                 // [{ ts, msg, kind }]
 };
+
+// Copia limpia de los valores por defecto (para rellenar saves antiguos)
+const PRISTINE = JSON.parse(JSON.stringify(state));
 
 // Reset profundo (nueva partida)
 export function resetState () {
@@ -161,6 +181,7 @@ export function resetState () {
   state.progression.missionProgress = 0;
   state.progression.completedMissions = [];
   state.progression.miniGoal = null;
+  state.progression.miniGoalsDone = 0;
   state.progression.achievements = {};
   state.progression.eventActive = null;
   state.progression.prestigeLevel = 0;
@@ -177,6 +198,10 @@ export function resetState () {
   state.stats.playTimeSec = 0;
   state.stats.maxCombo = 1;
 
+  Object.assign(state.player, { level: 1, xp: 0 });
+  // La racha diaria sobrevive a la nueva partida (es del jugador, no del parque)
+  Object.assign(state.hooks, { spins: 1, spinClock: 0, boxesOpened: 0, bestCombo: 1 });
+
   state.log.length = 0;
 }
 
@@ -190,8 +215,10 @@ export function loadIntoState (incoming) {
         state[key].push(...incoming[key]);
       } else if (typeof state[key] === 'object' && state[key] !== null) {
         // Limpiar y volver a poblar el objeto
+        const defaults = JSON.parse(JSON.stringify(PRISTINE[key] || {}));
         for (const k of Object.keys(state[key])) delete state[key][k];
-        Object.assign(state[key], incoming[key]);
+        // Mantiene valores por defecto de campos nuevos que el save antiguo no tenga
+        Object.assign(state[key], defaults, incoming[key]);
       } else {
         state[key] = incoming[key];
       }

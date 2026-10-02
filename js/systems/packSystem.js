@@ -14,6 +14,10 @@ import { createDog } from './dogSystem.js';
 import { logEvent } from '../eventLog.js';
 import { sfx } from '../audioManager.js';
 import { modal, toast } from '../modalManager.js';
+import { gainXP } from './hookSystem.js';
+import { HOOKS, PARK } from '../config.js';
+import { confetti } from '../render/particles.js';
+import { shake, flash } from '../render/juice.js';
 
 const choice = arr => arr[Math.floor(Math.random() * arr.length)];
 
@@ -49,6 +53,7 @@ export function openPack (packId) {
   if (state.progression.miniGoal?.type === 'packsOpened') {
     state.progression.miniGoal.progress = (state.progression.miniGoal.progress || 0) + 1;
   }
+  gainXP(HOOKS.XP_PER_PACK);
   return openOne(pack);
 }
 
@@ -61,6 +66,7 @@ export function openTen (packId) {
   if (state.progression.miniGoal?.type === 'packsOpened') {
     state.progression.miniGoal.progress = (state.progression.miniGoal.progress || 0) + 10;
   }
+  gainXP(HOOKS.XP_PER_PACK * 10);
   const results = [];
   for (let i = 0; i < 10; i++) results.push(...openOne(pack, true));
   // Garantía: si es legendary y no hay raro+, fuerza uno
@@ -130,43 +136,92 @@ function openOne (pack, batch = false) {
 }
 
 // ---------- Animaciones de apertura ----------
+// Las cartas salen boca abajo con un brillo del color de su rareza (pista)
+// y se voltean una a una. La mejor siempre queda para el final.
+const TIER_OF = { comun: 0, raro: 1, epico: 2, legend: 3, mitico: 4, cosmico: 5 };
+function tierOf (r) { return r.kind === 'dog' ? (TIER_OF[r.dog.rarity] ?? 0) : 0; }
+function glowOf (r) { return r.kind === 'dog' ? `var(--r-${r.dog.rarity})` : '#d8a861'; }
+
+function wrapFlip (r) {
+  const tier = tierOf(r);
+  return `<div class="flip tier-${tier}" data-tier="${tier}" style="--glow:${glowOf(r)}">
+    <div class="flip-inner">
+      <div class="flip-back"><span>?</span></div>
+      <div class="flip-front">${renderRevealCard(r)}</div>
+    </div>
+  </div>`;
+}
+
+function runReveal (root, gapMs = 220) {
+  const cards = [...root.querySelectorAll('.flip')];
+  let i = 0;
+  const flipOne = (el) => {
+    if (el.classList.contains('flipped')) return;
+    el.classList.add('flipped');
+    const tier = +el.dataset.tier;
+    if (tier >= 3) {
+      sfx.legendary();
+      shake(6 + tier * 2);
+      flash('rgba(255,215,120,0.45)');
+      confetti(PARK.W / 2, PARK.H / 2, 50 + tier * 10);
+    } else if (tier >= 1) sfx.stickerPop();
+    else sfx.reveal();
+  };
+  cards.forEach(el => { el.onclick = () => flipOne(el); });
+  const next = () => {
+    if (!root.isConnected || i >= cards.length) return;
+    const el = cards[i++];
+    const tier = +el.dataset.tier;
+    if (el.classList.contains('flipped')) { next(); return; }
+    if (tier >= 2) {
+      // Suspense: la carta tiembla y brilla antes de voltearse
+      el.classList.add('charging');
+      sfx.paperSlide();
+      setTimeout(() => { el.classList.remove('charging'); flipOne(el); setTimeout(next, gapMs + 250); }, 550 + tier * 160);
+    } else {
+      flipOne(el);
+      setTimeout(next, gapMs);
+    }
+  };
+  setTimeout(next, 450);
+}
+
 function showSingleResult (pack, results) {
-  const wave = results.map(r => renderRevealCard(r)).join('');
+  const sorted = results.slice().sort((a, b) => tierOf(a) - tierOf(b));
   const html = `
     <div style="text-align:center; padding:8px;">
-      <div style="font-size:48px; margin-bottom:8px;">${pack.icon}</div>
+      <div class="pack-burst">${pack.icon}</div>
       <h3 style="margin-bottom:8px;">${pack.name}</h3>
-      <div class="card-grid" style="justify-content:center;">${wave}</div>
+      <div class="card-grid reveal-grid" style="justify-content:center;">${sorted.map(wrapFlip).join('')}</div>
+      <p class="reveal-hint">Click en una carta para voltearla</p>
     </div>`;
-  modal.open({ title: 'Sobre abierto', body: html, footer: `<button class="btn primary" onclick="document.querySelector('.close').click()">Continuar</button>` });
+  const m = modal.open({ title: 'Sobre abierto', body: html, footer: `<button class="btn primary" data-close-modal>Continuar</button>${(state.resources.packs[pack.id] || 0) > 0 ? `<button class="btn gold" data-again>Abrir otro (${state.resources.packs[pack.id]})</button>` : ''}` });
+  wireFooter(m, pack, false);
   sfx.packOpen();
-  setTimeout(() => sfx.reveal(), 300);
-  if (results.some(r => r.kind === 'dog' && ['legend', 'mitico', 'cosmico'].includes(r.dog.rarity))) {
-    setTimeout(() => sfx.legendary(), 600);
-  }
+  runReveal(m);
 }
 
 function showOpenAnimation (pack, results) {
-  // Agrupar repetidos sencillos (food, etc.)
-  const grouped = groupResults(results);
-  const cardsHtml = grouped.map(r => renderRevealCard(r)).join('');
+  // Agrupar repetidos sencillos (food, etc.) y dejar lo mejor al final
+  const grouped = groupResults(results).sort((a, b) => tierOf(a) - tierOf(b));
   const html = `
     <div style="text-align:center;">
-      <div style="font-size:56px; margin-bottom:6px;">${pack.icon}</div>
+      <div class="pack-burst">${pack.icon}</div>
       <h3 style="margin-bottom:4px;">${pack.name} x10</h3>
-      <p style="color:var(--c-fg-muted); font-size:12px; margin-bottom:14px;">Resumen de la apertura</p>
-      <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(120px,1fr));">${cardsHtml}</div>
+      <p class="reveal-hint" style="margin-bottom:14px;">Lo mejor sale al final… 👀</p>
+      <div class="card-grid reveal-grid" style="grid-template-columns: repeat(auto-fill, minmax(120px,1fr));">${grouped.map(wrapFlip).join('')}</div>
     </div>`;
-  modal.open({ title: 'Apertura x10', body: html, wide: true, footer: `<button class="btn primary" onclick="document.querySelector('.close').click()">Continuar</button>` });
+  const m = modal.open({ title: 'Apertura x10', body: html, wide: true, footer: `<button class="btn primary" data-close-modal>Continuar</button>${(state.resources.packs[pack.id] || 0) >= 10 ? `<button class="btn gold" data-again>Abrir otros 10 (${state.resources.packs[pack.id]})</button>` : ''}` });
+  wireFooter(m, pack, true);
   sfx.packOpen();
-  let delay = 0;
-  for (const r of grouped) {
-    setTimeout(() => {
-      sfx.reveal();
-      if (r.kind === 'dog' && ['legend', 'mitico', 'cosmico'].includes(r.dog.rarity)) sfx.legendary();
-    }, delay);
-    delay += 80;
-  }
+  runReveal(m, 160);
+}
+
+function wireFooter (m, pack, ten) {
+  const close = m.querySelector('[data-close-modal]');
+  if (close) close.onclick = () => modal.close();
+  const again = m.querySelector('[data-again]');
+  if (again) again.onclick = () => { if (ten) openTen(pack.id); else openPack(pack.id); };
 }
 
 function groupResults (results) {

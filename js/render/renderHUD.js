@@ -5,6 +5,8 @@
 
 import { state } from '../gameState.js';
 import { ECONOMY } from '../config.js';
+import { fmt, rollCounter } from './juice.js';
+import { xpForLevel, activeBuffs, earnRatePerMin } from '../systems/hookSystem.js';
 
 let cache = {};
 const $ = id => document.getElementById(id);
@@ -24,7 +26,35 @@ const COMBO_COLORS = [
 export function renderHUD (dt) {
   // Popó
   const poop = Math.floor(state.resources.poop);
-  if (cache.poop !== poop) { $('stat-poop').textContent = poop.toLocaleString('es'); cache.poop = poop; }
+  if (cache.poop !== poop) { rollCounter($('stat-poop'), poop); cache.poop = poop; }
+
+  // Nivel + XP
+  const lvl = state.player?.level || 1;
+  const need = xpForLevel(lvl);
+  const xp = Math.floor(state.player?.xp || 0);
+  const lvlKey = lvl + ':' + xp;
+  if (cache.lvl !== lvlKey) {
+    $('stat-level').textContent = 'Nv ' + lvl;
+    $('stat-xp').textContent = fmt(xp) + '/' + fmt(need);
+    $('level-fill').style.width = Math.min(100, (xp / need) * 100) + '%';
+    const wrap = $('stat-level-wrap');
+    if (cache.lvlNum !== undefined && cache.lvlNum !== lvl && wrap) {
+      wrap.classList.remove('level-up'); void wrap.offsetWidth; wrap.classList.add('level-up');
+    }
+    cache.lvlNum = lvl;
+    cache.lvl = lvlKey;
+  }
+
+  // Ruleta
+  const spins = state.hooks?.spins || 0;
+  if (cache.spins !== spins) {
+    $('wheel-count').textContent = spins;
+    $('btn-wheel').classList.toggle('has-spins', spins > 0);
+    cache.spins = spins;
+  }
+
+  // Buffs activos
+  renderBuffs();
 
   // Perros
   const dogs = state.park.activeDogs.length + '/' + state.park.capacity;
@@ -52,8 +82,9 @@ export function renderHUD (dt) {
   if (overlay) overlay.classList.toggle('active', state.fever.active);
 
   // Popó por minuto (estimado)
-  const ppm = estimatePPM();
-  if (cache.ppm !== ppm) { $('stat-ppm').textContent = ppm.toLocaleString('es'); cache.ppm = ppm; }
+  // Mostramos lo que realmente estás ganando si supera el estimado pasivo
+  const ppm = Math.max(estimatePPM(), Math.round(earnRatePerMin()));
+  if (cache.ppm !== ppm) { $('stat-ppm').textContent = fmt(ppm); cache.ppm = ppm; }
 
   // Banner evento
   const banner = $('event-banner');
@@ -64,6 +95,8 @@ export function renderHUD (dt) {
 }
 
 function updateComboFloat () {
+  // El combo ahora se muestra junto al cursor (anillo) y con callouts grandes
+  return;
   const el = $('combo-float');
   if (!el) return;
   const m = state.combo.multiplier;
@@ -88,6 +121,24 @@ function updateComboFloat () {
     el.classList.add('hidden');
   }
   _comboLastSeen = m;
+}
+
+function renderBuffs () {
+  const bar = $('buff-bar');
+  if (!bar) return;
+  const now = performance.now();
+  const buffs = activeBuffs();
+  const key = buffs.map(b => b.id + Math.ceil((b.until - now) / 1000)).join('|');
+  if (cache.buffs === key) return;
+  cache.buffs = key;
+  bar.innerHTML = buffs.map(b => {
+    const left = Math.max(0, (b.until - now) / 1000);
+    const pct = Math.min(100, (left * 1000 / b.total) * 100);
+    return `<div class="buff-chip" style="--buff-color:${b.color}">
+      <div class="buff-fill" style="width:${pct}%"></div>
+      <span>${b.icon} ${b.name}${b.mult > 1 ? ' x' + b.mult : ''}</span><strong>${Math.ceil(left)}s</strong>
+    </div>`;
+  }).join('');
 }
 
 function colorForCombo (m) {

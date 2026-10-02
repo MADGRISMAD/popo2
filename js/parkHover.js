@@ -16,11 +16,25 @@ import { dogValue } from './systems/sellSystem.js';
 let _hoverDogId = null;
 let _hoverBowlId = null;
 let _hideAt = 0;
+// El tooltip del perro solo aparece si te quedas quieto encima (no estorba al recoger)
+const DWELL_MS = 420;
+let _candidateId = null;
+let _candidateSince = 0;
+let _lastEvt = null;
 
 export function initParkHover () {
   onParkMove(handleMove);
   // Tick para ocultar tooltip si el cursor sale o se queda muy lejos
   setInterval(() => {
+    if (_candidateId !== null && _hoverDogId !== _candidateId && _lastEvt
+        && performance.now() - _candidateSince >= DWELL_MS) {
+      const d = state.dogs.map[_candidateId];
+      if (d && Math.hypot(d.x - _lastEvt.x, d.y - _lastEvt.y) < 34) {
+        _hoverDogId = d.id;
+        _hideAt = 0;
+        tooltip.show(buildDogTooltip(d), _lastEvt.cx, _lastEvt.cy);
+      } else _candidateId = null;
+    }
     if (_hideAt && performance.now() > _hideAt) {
       tooltip.hide();
       _hoverDogId = null;
@@ -48,13 +62,22 @@ function handleMove (p, e) {
 
   // 1) Perros
   const dog = findDogAt(p.x, p.y);
+  _lastEvt = { x: p.x, y: p.y, cx: e.clientX, cy: e.clientY };
   if (dog) {
-    _hoverDogId = dog.id;
+    if (_candidateId !== dog.id) {
+      _candidateId = dog.id;
+      _candidateSince = performance.now();
+      if (_hoverDogId !== null || _hoverBowlId !== null) { tooltip.hide(); _hoverDogId = null; _hoverBowlId = null; }
+      return;
+    }
     _hoverBowlId = null;
-    _hideAt = 0;
-    tooltip.show(buildDogTooltip(dog), e.clientX, e.clientY);
+    if (_hoverDogId === dog.id) {
+      _hideAt = 0;
+      tooltip.show(buildDogTooltip(dog), e.clientX, e.clientY);
+    }
     return;
   }
+  _candidateId = null;
 
   // 2) Platos
   const bowl = findBowlAt(p.x, p.y);

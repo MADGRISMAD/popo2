@@ -5,7 +5,7 @@
 
 export const GAME = Object.freeze({
   NAME: 'Popó Park',
-  VERSION: '0.1.0',
+  VERSION: '0.3.0',
   SAVE_VERSION: 1,
   SAVE_KEY: 'popo-park-save',
   AUTO_SAVE_MS: 20_000,
@@ -32,13 +32,13 @@ export const ECONOMY = Object.freeze({
   START_PACK_DOG: 1,
   START_PACK_LEGEND: 0,
   // Multiplicadores de combo de recolección
-  COMBO_DECAY_MS: 1500,
-  COMBO_STEP: 0.05,
-  COMBO_MAX: 5.0,
+  COMBO_DECAY_MS: 2400,     // ventana antes de que el combo empiece a enfriarse
+  COMBO_STEP: 0.08,
+  COMBO_MAX: 10.0,
   FEVER_MAX: 100,
   FEVER_DECAY_PER_SEC: 1.2,
-  FEVER_GAIN_PER_PICK: 1.4,
-  FEVER_DURATION_MS: 12_000,
+  FEVER_GAIN_PER_PICK: 2.2,
+  FEVER_DURATION_MS: 14_000,
 });
 
 export const DOG = Object.freeze({
@@ -55,8 +55,8 @@ export const DOG = Object.freeze({
   PRODUCE_VETERAN_MULT: 0.85,
   MOVE_SPEED_BASE: 22,      // px/s
   MOVE_SPEED_BABY_MULT: 0.6,
-  POOP_INTERVAL_BASE: 4,    // segundos base entre popó (perro común adulto)
-  POOP_INTERVAL_VAR: 3,     // variación aleatoria
+  POOP_INTERVAL_BASE: 2.6,   // segundos base entre popó (perro común adulto)
+  POOP_INTERVAL_VAR: 1.8,    // variación aleatoria
   FIGHT_REST_MS: 8_000,
   HUNGRY_THRESHOLD: 35,
   PARK_CAPACITY_BASE: 5,
@@ -106,4 +106,23 @@ export const POOP = Object.freeze({
   MAGNET_RADIUS_BASE: 0,
   MAGNET_RADIUS_STEP: 22,
   MAX_ON_GROUND: 80,
+});
+
+// Ganchos de progresión / recompensa variable (nivel, ruleta, cajas, diario)
+export const HOOKS = Object.freeze({
+  XP_BASE: 25,              // XP para pasar de nivel 1 a 2
+  XP_GROWTH: 1.22,          // crecimiento por nivel
+  XP_PER_POOP: 1,
+  XP_PER_GOLDEN: 6,
+  XP_PER_RAINBOW: 40,
+  XP_PER_PACK: 4,
+  XP_PER_BIRTH: 25,
+  XP_PER_BOX: 15,
+  FREE_SPIN_EVERY_S: 480,   // giro gratis cada 8 min jugados
+  BOX_MIN_S: 40,            // caja misteriosa: cada 40–100 s
+  BOX_VAR_S: 60,
+  BOX_LIFETIME_S: 11,
+  RAINBOW_CHANCE: 0.004,    // popó arcoíris (jackpot)
+  RAINBOW_MULT: 60,
+  FEVER_RAIN: 18,           // popós extra que caen al activar fiebre
 });

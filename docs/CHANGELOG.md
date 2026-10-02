@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.3.0 — Modo adictivo
+
+### Nuevos ganchos
+- **Nivel de cuidador** con barra de XP siempre visible. Ganas XP con cada popó, sobre, caja y cachorro. Cada nivel da popó, un giro de ruleta y, cada 3/5/10 niveles, sobres.
+- **Ruleta de la Suerte** (🎡 en la barra superior): giros por nivel, recompensa diaria, cajas y uno gratis cada 8 min de juego. Jackpot de 25 min de producción.
+- **Caja misteriosa**: cae al parque cada 40–100 s y dura 11 s. Premios: Frenesí x7, lluvia de popó, bolsa de popó, imán gigante, toque dorado, fiebre, giro o sobres.
+- **Popó arcoíris** (0,4 %): vale x60, celebración enorme.
+- **Recompensa diaria con racha** de 7 días (el día 7 trae un Sobre Legendario). Si faltas un día, pierdes la racha.
+- **Ganancias offline** con popup (hasta 4 h).
+- **Buffs temporales** visibles en la barra superior con cuenta atrás.
+
+### Game feel
+- Combo hasta **x10**, con anillo de tiempo alrededor del cursor, callouts (¡GENIAL!, ¡BRUTAL!, ¡¡POPÓ-DIOS!!) y aviso de combo perdido.
+- Cada popó del combo suena una nota más aguda (escala pentatónica).
+- Sacudida de pantalla, flash y banners gigantes en momentos importantes (en cola, sin solaparse).
+- La Fiebre del Parque ahora trae una lluvia de popó.
+- Contador de popó que rueda y rebota; números grandes abreviados (K, M, B…).
+- Sobres con cartas boca abajo que brillan del color de su rareza y se voltean una a una; lo mejor sale al final, con temblor de suspense en épicas+. Botón "Abrir otro".
+- La tienda ordena por precio, brilla en verde lo que puedes comprar y muestra una barra de "casi lo tienes".
+- Contador de sobres sin abrir en la pestaña Sobres.
+- El tooltip del perro solo aparece si dejas el cursor quieto encima (ya no tapa el parque al recoger).
+
+### Arreglos
+- Las mejoras **Productividad canina**, **Parque feliz** y **Estómago grande** no tenían efecto; ahora funcionan.
+- Los mini objetivos de recolectar/doradas se completaban mal (usaban el total de la partida). Ahora cuentan desde que aparecen, escalan en dificultad y pagan más.
+- El footer crecía con el log y empujaba el parque.
+- Las popós guardadas se normalizan al cargar.
+- Los saves antiguos se completan con los valores por defecto de los campos nuevos.
+
 ## v0.2.0 — Diorama de papel (gran actualización gráfica)
 
 ### Dirección artística

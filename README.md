@@ -97,6 +97,7 @@ popo-park/
 - Misión principal lineal · mini objetivo rotativo · logros como toasts · eventos globales temporales.
 - Colección de razas / híbridos / mutaciones con siluetas.
 - Renombre Canino (prestigio) con puntos persistentes.
+- Nivel de cuidador con XP, ruleta de la suerte, caja misteriosa, popó arcoíris, recompensa diaria con racha, buffs temporales y ganancias offline.
 - Guardado local con migración versionada.
 - Audio sintetizado (Web Audio API).
 

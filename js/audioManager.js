@@ -68,6 +68,17 @@ function noise ({ dur = 0.08, vol = 0.2, hp = 800 } = {}) {
   src.start();
 }
 
+// Escala pentatónica: cada popó del combo sube un escalón → suena a melodía
+const PENTA = [0, 2, 4, 7, 9];
+function comboFreq (step) {
+  const oct = Math.floor(step / PENTA.length);
+  const semis = PENTA[step % PENTA.length] + oct * 12;
+  return 523.25 * Math.pow(2, Math.min(semis, 30) / 12); // desde Do5
+}
+function arpeggio (notes, gap = 70, type = 'triangle', vol = 0.18, dur = 0.12) {
+  notes.forEach((f, i) => setTimeout(() => tone({ freq: f, type, dur, vol }), i * gap));
+}
+
 // ---------- API pública ----------
 export const sfx = {
   pick:        () => tone({ freq: 880, freqEnd: 1320, type: 'triangle', dur: 0.05, vol: 0.18 }),
@@ -98,6 +109,27 @@ export const sfx = {
     tone({ freq: 660, freqEnd: 990, type: 'triangle', dur: 0.18, vol: 0.20 });
     setTimeout(() => tone({ freq: 990, freqEnd: 1320, type: 'triangle', dur: 0.20, vol: 0.20 }), 130);
   },
+  pickCombo:   (step, fever = false) => {
+    const f = comboFreq(step);
+    tone({ freq: f, freqEnd: f * 1.02, type: fever ? 'square' : 'triangle', dur: 0.06, vol: fever ? 0.10 : 0.16 });
+    if (step > 0 && step % 5 === 0) setTimeout(() => tone({ freq: f * 2, type: 'sine', dur: 0.08, vol: 0.10 }), 35);
+  },
+  rainbow:     () => {
+    arpeggio([523, 659, 784, 1047, 1319, 1568, 2093], 55, 'square', 0.13, 0.10);
+    setTimeout(() => noise({ dur: 0.4, vol: 0.10, hp: 3000 }), 380);
+  },
+  levelUp:     () => {
+    arpeggio([392, 523, 659, 784], 85, 'square', 0.14, 0.12);
+    setTimeout(() => { tone({ freq: 1047, type: 'triangle', dur: 0.45, vol: 0.20 }); tone({ freq: 1319, type: 'sine', dur: 0.45, vol: 0.12 }); }, 360);
+  },
+  comboBreak:  () => tone({ freq: 392, freqEnd: 196, type: 'triangle', dur: 0.28, vol: 0.14 }),
+  comboCall:   (lvl) => arpeggio([660 + lvl * 60, 880 + lvl * 80], 60, 'square', 0.10, 0.08),
+  wheelTick:   () => tone({ freq: 1400, type: 'square', dur: 0.015, vol: 0.08 }),
+  boxSpawn:    () => { tone({ freq: 1568, type: 'sine', dur: 0.08, vol: 0.12 });
+                       setTimeout(() => tone({ freq: 2093, type: 'sine', dur: 0.12, vol: 0.12 }), 90); },
+  boxOpen:     () => { noise({ dur: 0.15, vol: 0.14, hp: 1500 });
+                       arpeggio([784, 988, 1175, 1568], 50, 'triangle', 0.16, 0.10); },
+  coin:        () => tone({ freq: 1976, freqEnd: 2637, type: 'square', dur: 0.04, vol: 0.06 }),
   bark:        () => tone({ freq: 320, freqEnd: 180, type: 'sawtooth', dur: 0.10, vol: 0.18 }),
   fight:       () => { noise({ dur: 0.10, vol: 0.20, hp: 1200 });
                        setTimeout(() => tone({ freq: 180, freqEnd: 80, type: 'square', dur: 0.10, vol: 0.18 }), 40); },

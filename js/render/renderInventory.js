@@ -43,7 +43,9 @@ export function renderInventory () {
 function renderTabs () {
   const wrap = $('inventory-tabs');
   if (!wrap) return;
-  wrap.innerHTML = TABS.map(t => `<button class="tab ${activeTab === t.id ? 'active' : ''}" data-tab="${t.id}">${t.name}</button>`).join('');
+  const unopened = Object.values(state.resources.packs || {}).reduce((a, b) => a + (b || 0), 0);
+  const badge = id => id === 'shop' && unopened > 0 ? `<span class="tab-badge">${unopened}</span>` : '';
+  wrap.innerHTML = TABS.map(t => `<button class="tab ${activeTab === t.id ? 'active' : ''}" data-tab="${t.id}">${t.name}${badge(t.id)}</button>`).join('');
   wrap.querySelectorAll('[data-tab]').forEach(btn => {
     btn.onclick = () => { activeTab = btn.dataset.tab; renderInventory(); };
   });

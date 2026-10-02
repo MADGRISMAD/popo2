@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/cards.css" />
   <link rel="stylesheet" href="css/park.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/juice.css" />
 </head>
 <body>
   <!-- =============================================================
@@ -43,7 +44,7 @@
             <button class="btn ghost big" data-menu="credits">Créditos</button>
             <button class="btn ghost big" data-menu="exit">Salir</button>
           </nav>
-          <div class="menu-version">v0.1.0 · build local</div>
+          <div class="menu-version">v0.3.0 · build local</div>
         </div>
       </section>
 
@@ -52,6 +53,11 @@
         <!-- Barra superior -->
         <header id="topbar">
           <div class="title">Popó Park</div>
+          <div class="stat level" id="stat-level-wrap" data-tooltip="Nivel de cuidador: sube recogiendo popó, abriendo sobres y criando. Cada nivel da premios y un giro de ruleta.">
+            <div class="level-fill" id="level-fill"></div>
+            <span class="ico">⭐</span><strong id="stat-level">Nv 1</strong>
+            <span class="level-xp" id="stat-xp">0/25</span>
+          </div>
           <div class="stat" data-stat="poop"><span class="ico">💩</span><strong id="stat-poop">0</strong></div>
           <div class="stat" data-stat="ppm"><span class="ico">⚡</span><strong id="stat-ppm">0</strong>/min</div>
           <div class="stat" data-stat="dogs"><span class="ico">🐾</span><strong id="stat-dogs">0/0</strong></div>
@@ -60,6 +66,8 @@
             <div class="fever-fill" id="fever-fill"></div>
             <span class="ico">✨</span><strong id="stat-fever">Fiebre 0%</strong>
           </div>
+          <button class="btn wheel-btn" id="btn-wheel" data-tooltip="Ruleta de la Suerte">🎡 <span id="wheel-count">0</span></button>
+          <div id="buff-bar"></div>
           <div id="event-banner" class="hidden"></div>
           <div class="actions">
             <button class="btn ghost" id="btn-save">Guardar</button>
